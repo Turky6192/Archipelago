@@ -113,9 +113,9 @@ class MaxLevel(Range):
 	**Warning:** Levels above 50 require DLC and considerably more time to potentially reach.
 	"""
     display_name = "Max Level"
-    range_start = 36
+    range_start = 30
     range_end = 80
-    default = 50
+    default = 36
 
 
 class Chestsanity(Toggle):

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from Options import OptionError
 from BaseClasses import Region, Location, Item, Tutorial, ItemClassification
 from worlds.AutoWorld import World, WebWorld
 
@@ -22,14 +23,27 @@ class Borderlands2World(World):
     options_dataclass = Borderlands2Options
     item_name_to_id = item_table
     location_name_to_id = location_table
+    selected_dlc: list[str]
 
 
-    # def generate_early(self) -> None:
+
+    def generate_early(self) -> None:
     #     """
     #     Run before any general steps of the MultiWorld other than options. Useful for getting and adjusting option
     #     results and determining layouts for entrance rando etc. start inventory gets pushed after this step.
     #     """
-    #     pass
+        selected_dlc = list(self.options.allowed_dlc)
+        if self.options.max_level > 50:
+            level_dlc =  {"UVHM 1": 11, "UVHM 2": 11, "Fight for Sanctuary": 8}
+            allowed_max = 50
+            for dlc in level_dlc.keys():
+                if dlc in selected_dlc:
+                    allowed_max += level_dlc[dlc]
+            if allowed_max < self.options.max_level:
+                raise OptionError(f"Borderlands 2: Player {self.player} ({self.player_name} does not have required DLCs"
+                                  f" enabled to reach desired Max Level ({self.options.max_level}).)")
+
+
     #
     # def create_regions(self) -> None:
     #     """Method for creating and connecting regions for the World."""
