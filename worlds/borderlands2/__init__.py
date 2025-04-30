@@ -32,13 +32,11 @@ class Borderlands2World(World):
     #     Run before any general steps of the MultiWorld other than options. Useful for getting and adjusting option
     #     results and determining layouts for entrance rando etc. start inventory gets pushed after this step.
     #     """
+        # Verify that the player can reach all level locations wanted with chosen DLC options
         selected_dlc = list(self.options.allowed_dlc)
         if self.options.max_level > 50:
             level_dlc =  {"UVHM 1": 11, "UVHM 2": 11, "Fight for Sanctuary": 8}
-            allowed_max = 50
-            for dlc in level_dlc.keys():
-                if dlc in selected_dlc:
-                    allowed_max += level_dlc[dlc]
+            allowed_max = 50 + sum(level_dlc[dlc] for dlc in level_dlc if dlc in selected_dlc)
             if allowed_max < self.options.max_level:
                 raise OptionError(f"Borderlands 2: Player {self.player} ({self.player_name} does not have required DLCs"
                                   f" enabled to reach desired Max Level ({self.options.max_level}).)")
