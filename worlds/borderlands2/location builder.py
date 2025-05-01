@@ -44,4 +44,6 @@ def chara_skill_build():
         for skill in skills:
             print(f""""{skill}": Borderlands2ItemData(type="Skill", i_class=IC.progression, count=5, character="{char}"),""")
 
-chara_skill_build()
+#chara_skill_build()
+
+
