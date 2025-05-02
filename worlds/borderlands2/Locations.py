@@ -1,4 +1,4 @@
-from typing import Dict, NamedTuple, Optional, TYPE_CHECKING
+from typing import List, Dict, NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Location
 
@@ -12,7 +12,7 @@ class Borderlands2LocationData(NamedTuple):
     in_game_region: str
     story_region: int
     type: str
-    dlc: Optional[list[str]] = None
+    dlc: Optional[List[str]] = None
     locked_item: Optional[str] = None
 
 dlc_names = ["Pirate's Booty", "Campaign of Carnage", "Big Game Hunt", "Assault on Dragon Keep", "UVHM 1", "UVHM 2",
@@ -113,7 +113,7 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "Hyperion Contract #873": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
     "3:10 to Kaboom": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
     "Breaking the Bank": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
-    "Showdown (after both 3:10 to Kaboom and Breaking the Bank are complete)": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
+    "Showdown": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
     "Animal Rescue: Medicine": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
     "Animal Rescue: Food": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
     "Animal Rescue: Shelter": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=12, type="Optional Mission",),
@@ -121,7 +121,7 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "Where Angels Fear to Tread": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=14, type="Story Mission",),
     "BFFs": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=14, type="Optional Mission",),
     "Bearer of Bad News": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=14, type="Optional Mission",),
-    "Demon Hunter (after Animal Rescue: Shelter is complete)": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=14, type="Optional Mission",),
+    "Demon Hunter": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=14, type="Optional Mission",),
     "Where Angels Fear to Tread (Part 2)": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=15, type="Story Mission",),
     "Hyperion Slaughter: Round 1": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=15, type="Optional Mission",),
     "Hyperion Slaughter: Round 2": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=15, type="Optional Mission",),
@@ -231,7 +231,5 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "Level 79": Borderlands2LocationData(in_game_region="Player", story_region=19, type="Level", dlc=["UVHM 1", "UVHM 2", "Fight for Sanctuary"]),
     "Level 80": Borderlands2LocationData(in_game_region="Player", story_region=19, type="Level", dlc=["UVHM 1", "UVHM 2", "Fight for Sanctuary"]),
 }
-
-#location_table = {name: 7 + id for id, (name, data) in enumerate(location_data_table.keys()) if not data.type in ["Event"]}
 
 location_table = {name: 61 + id for id, (name, data) in enumerate(location_data_table.items()) if "Event" != data.type}

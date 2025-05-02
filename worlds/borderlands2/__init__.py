@@ -25,8 +25,11 @@ class Borderlands2World(World):
     options_dataclass = Borderlands2Options
     item_name_to_id = item_table
     location_name_to_id = location_table
+    explicit_indirect_conditions: False
+
     selected_dlc: List[str]
     origin_region_name = "Meet Claptrap"
+    selected_chara: int
 
     player_location_pool: Dict[str, int]
 
@@ -35,6 +38,12 @@ class Borderlands2World(World):
     #     Run before any general steps of the MultiWorld other than options. Useful for getting and adjusting option
     #     results and determining layouts for entrance rando etc. start inventory gets pushed after this step.
     #     """
+        # Verify a specific character is chosen if skill rando is set to "skills in pool"
+        self.selected_chara = self.options.character
+        if self.selected_chara == 0 and self.options.skill_randomization == 2:
+            raise OptionError(f"Borderlands 2: Player {self.player} ({self.player_name} has Skill Randomization set to"
+                              f" 'Skills in Pool' but did not select a specific character.")
+
         # Verify that the player can reach all level locations wanted with chosen DLC options
         selected_dlc = list(self.options.allowed_dlc)
         if self.options.max_level > 50:
@@ -55,26 +64,38 @@ class Borderlands2World(World):
     def create_regions(self) -> None:
         for region_name in story_region_names:
             region = Region(region_name, self.player, self.multiworld)
-            region.add_locations()
+            mapped_loc_per_region = {name: id for name, id in self.player_location_pool.items() if name in region_location_map[region_name]}
+            region.add_locations(mapped_loc_per_region)
             self.multiworld.regions.append(region)
 
         exit_index = 1
         for region_name in story_region_names:
-            if story_region_names.index(region_name) == 18:
+            if story_region_names.index(region_name) == 19:
                 break
             region = self.get_region(region_name)
             exit_region = self.get_region(story_region_names[exit_index])
-            region.connect(exit_region, "" , lambda state: state.has("Progressive Story Mission", self.player, exit_index))
+            region.connect(exit_region, rule=lambda state: state.has_any_count({"Progressive Story Mission": exit_index} , self.player))
             exit_index += 1
+
+
+        #from Utils import visualize_regions
+        #visualize_regions(self.multiworld.get_region("Meet Claptrap", self.player), "my_world.puml")
 
     def create_item(self, name: str) -> Borderlands2Item:
         item_data = item_data_table[name]
-        itemclass = item_data.i_class
-        return Borderlands2Item(name, itemclass, self.item_name_to_id[name], self.player)
+        item_class = item_data.i_class
+        return Borderlands2Item(name, item_class, self.item_name_to_id[name], self.player)
 
     def create_items(self) -> None:
-        borlderlands2_items: List[Borderlands2Item] = []
+        borderlands2_items: List[Borderlands2Item] = []
+        # Story missions are the main bottleneck so they always need added
+        borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(18)]
 
+        # Skill points or character-specific skills next
+        if self.selected_chara == 0:
+            borderlands2_items += [self.create_item("Skill Point") for _ in range(self.options.max_level - 3)]
+
+        self.multiworld.itempool += borderlands2_items
 
     def get_filler_item_name(self) -> str:
         return self.random.choice(filler_items)

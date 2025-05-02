@@ -1,3 +1,14 @@
+from typing import Dict, List, NamedTuple, Optional
+
+from BaseClasses import Region
+from .Locations import location_data_table, dlc_names
+
+story_regions: List[List[str]]
+in_game_regions: List[List[str]]
+
+
+
+
 from .Locations import location_data_table
 
 
@@ -32,9 +43,10 @@ story_regions = [meet_claptrap, meet_knuckle_dragger, meet_hammerlock, meet_flyn
                  meet_roland, meet_wilhelm, raise_sanctuary, find_sanctuary, meet_bloodwing, meet_brick, find_opportunity,
                  meet_angel, rolands_death, find_arid_nexus, return_to_fyrestone, meet_the_warrior, post_jack]
 
-region_location_map = []
-for i in range(0, 19):
-    region_location_map += dict([story_region_names[i]]: story_regions[i])
+region_location_map = dict()
+for i in range(0, 20):
+    region_location_map[story_region_names[i]] = story_regions[i]
+
 
 arid_nexus_badlands = [name for name, data in location_data_table.items() if data.in_game_region == "Arid Nexus Badlands"]
 arid_nexus_boneyard = [name for name, data in location_data_table.items() if data.in_game_region == "Arid Nexus Boneyard"]

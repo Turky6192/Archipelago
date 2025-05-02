@@ -32,10 +32,10 @@ class Goal(Choice):
 	- **Claptrap's Quest:** Truly complete the "Claptrap's Secret Stash" mission by finding all the items (MacGuffins) he requests.
 	"""
     display_name = "Goal"
-    option_main_story = 1
-    option_boss_hunt = 2
-    option_claptraps_quest = 3
-    default = 1
+    option_main_story = 0
+    option_boss_hunt = 1
+    option_claptraps_quest = 2
+    default = 0
 
 
 class AllowedDLC(OptionSet):
@@ -76,10 +76,10 @@ class SkillRandom(Choice):
 	- **Skills in Pool:** Only applicable if a specific character is set in your options. Adds a random selection of your character's skills as items up to an amount determined by your "Max Level" and "Extra Points" options.
 	"""
     display_name = "Skill Randomization"
-    option_vanilla = 1
-    option_points_in_pool = 2
-    option_skills_in_pool = 3
-    default = 2
+    option_vanilla = 0
+    option_points_in_pool = 1
+    option_skills_in_pool = 2
+    default = 1
 
 
 class ExtraSkill(Range):
