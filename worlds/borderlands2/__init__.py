@@ -246,17 +246,7 @@ class Borderlands2World(World):
     #
     # # end of ordered Main.py calls
     #
-    # def create_item(self, name: str) -> "Item":
-    #     """
-    #     Create an item for this world type and player.
-    #     Warning: this may be called with self.world = None, for example by MultiServer
-    #     """
-    #     raise NotImplementedError
     #
-    # def get_filler_item_name(self) -> str:
-    #     """Called when the item pool needs to be filled with additional items to match location count."""
-    #     logging.warning(f"World {self} is generating a filler item without custom filler pool.")
-    #     return self.multiworld.random.choice(tuple(self.item_name_to_id.keys()))
     #
     # @classmethod
     # def create_group(cls, multiworld: "MultiWorld", new_player_id: int, players: Set[int]) -> World:
@@ -313,50 +303,3 @@ class Borderlands2World(World):
     #         return True
     #     return False
     #
-    # # following methods should not need to be overridden.
-    # def create_filler(self) -> "Item":
-    #     return self.create_item(self.get_filler_item_name())
-    #
-    # # convenience methods
-    # def get_location(self, location_name: str) -> "Location":
-    #     return self.multiworld.get_location(location_name, self.player)
-    #
-    # def get_locations(self) -> "Iterable[Location]":
-    #     return self.multiworld.get_locations(self.player)
-    #
-    # def get_entrance(self, entrance_name: str) -> "Entrance":
-    #     return self.multiworld.get_entrance(entrance_name, self.player)
-    #
-    # def get_entrances(self) -> "Iterable[Entrance]":
-    #     return self.multiworld.get_entrances(self.player)
-    #
-    # def get_region(self, region_name: str) -> "Region":
-    #     return self.multiworld.get_region(region_name, self.player)
-    #
-    # def get_regions(self) -> "Iterable[Region]":
-    #     return self.multiworld.get_regions(self.player)
-    #
-    # def push_precollected(self, item: Item) -> None:
-    #     self.multiworld.push_precollected(item)
-    #
-    # @property
-    # def player_name(self) -> str:
-    #     return self.multiworld.get_player_name(self.player)
-    #
-    # @classmethod
-    # def get_data_package_data(cls) -> "GamesPackage":
-    #     sorted_item_name_groups = {
-    #         name: sorted(cls.item_name_groups[name]) for name in sorted(cls.item_name_groups)
-    #     }
-    #     sorted_location_name_groups = {
-    #         name: sorted(cls.location_name_groups[name]) for name in sorted(cls.location_name_groups)
-    #     }
-    #     res: "GamesPackage" = {
-    #         # sorted alphabetically
-    #         "item_name_groups": sorted_item_name_groups,
-    #         "item_name_to_id": cls.item_name_to_id,
-    #         "location_name_groups": sorted_location_name_groups,
-    #         "location_name_to_id": cls.location_name_to_id,
-    #     }
-    #     res["checksum"] = data_package_checksum(res)
-    #     return res
