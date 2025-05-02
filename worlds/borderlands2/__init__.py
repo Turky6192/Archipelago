@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import List, Dict
 
 from Options import OptionError
 from BaseClasses import Region, Location, Item, Tutorial, ItemClassification
@@ -9,6 +10,7 @@ from .Locations import *
 from .Options import Borderlands2Options
 from .Regions import *
 from .Rules import *
+from ..smw.Names.LocationName import menu_region
 
 
 class Borderlands2Web(WebWorld):
@@ -23,9 +25,10 @@ class Borderlands2World(World):
     options_dataclass = Borderlands2Options
     item_name_to_id = item_table
     location_name_to_id = location_table
-    selected_dlc: list[str]
+    selected_dlc: List[str]
+    origin_region_name = "Meet Claptrap"
 
-
+    player_location_pool: Dict[str, int]
 
     def generate_early(self) -> None:
     #     """
@@ -41,19 +44,41 @@ class Borderlands2World(World):
                 raise OptionError(f"Borderlands 2: Player {self.player} ({self.player_name} does not have required DLCs"
                                   f" enabled to reach desired Max Level ({self.options.max_level}).)")
 
+        self.player_location_pool = self.location_name_to_id.copy()
 
-    #
-    # def create_regions(self) -> None:
-    #     """Method for creating and connecting regions for the World."""
-    #     pass
-    #
-    # def create_items(self) -> None:
-    #     """
-    #     Method for creating and submitting items to the itempool. Items and Regions must *not* be created and submitted
-    #     to the MultiWorld after this step. If items need to be placed during pre_fill use `get_prefill_items`.
-    #     """
-    #     pass
-    #
+        # Removes levels from location pool above selected max level
+        if self.options.max_level < 80:
+            for level in range(self.options.max_level + 1, 81):
+                del self.player_location_pool[f"Level {level}"]
+
+
+    def create_regions(self) -> None:
+        for region_name in story_region_names:
+            region = Region(region_name, self.player, self.multiworld)
+            region.add_locations()
+            self.multiworld.regions.append(region)
+
+        exit_index = 1
+        for region_name in story_region_names:
+            if story_region_names.index(region_name) == 18:
+                break
+            region = self.get_region(region_name)
+            exit_region = self.get_region(story_region_names[exit_index])
+            region.connect(exit_region, "" , lambda state: state.has("Progressive Story Mission", self.player, exit_index))
+            exit_index += 1
+
+    def create_item(self, name: str) -> Borderlands2Item:
+        item_data = item_data_table[name]
+        itemclass = item_data.i_class
+        return Borderlands2Item(name, itemclass, self.item_name_to_id[name], self.player)
+
+    def create_items(self) -> None:
+        borlderlands2_items: List[Borderlands2Item] = []
+
+
+    def get_filler_item_name(self) -> str:
+        return self.random.choice(filler_items)
+
     # def set_rules(self) -> None:
     #     """Method for setting the rules on the World's regions and locations."""
     #     pass
