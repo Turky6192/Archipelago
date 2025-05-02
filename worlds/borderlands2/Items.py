@@ -238,5 +238,7 @@ item_data_table: Dict[str, Borderlands2ItemData] = {
 
 }
 
+
+
 item_table = {name: 61 + id for id, (name, data) in enumerate(item_data_table.items()) if "Event" != data.i_class}
 filler_items = [name for name, data in item_data_table.items() if data.type == "Filler"]

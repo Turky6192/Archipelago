@@ -30,6 +30,8 @@ class Borderlands2World(World):
     selected_dlc: List[str]
     origin_region_name = "Meet Claptrap"
     selected_chara: int
+    skill_rando: int
+    pooled_skills: int
 
     player_location_pool: Dict[str, int]
 
@@ -40,7 +42,9 @@ class Borderlands2World(World):
     #     """
         # Verify a specific character is chosen if skill rando is set to "skills in pool"
         self.selected_chara = self.options.character
-        if self.selected_chara == 0 and self.options.skill_randomization == 2:
+        self.skill_rando = self.options.skill_randomization
+        self.pooled_skills = self.options.max_level - 3 + self.options.extra_skills
+        if self.selected_chara == 0 and self.skill_rando == 2:
             raise OptionError(f"Borderlands 2: Player {self.player} ({self.player_name} has Skill Randomization set to"
                               f" 'Skills in Pool' but did not select a specific character.")
 
@@ -91,9 +95,33 @@ class Borderlands2World(World):
         # Story missions are the main bottleneck so they always need added
         borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(18)]
 
+        def get_skills(character, num) -> List[str]:
+            characters = {1: "Salvador", 2: "Zero", 3: "Maya", 4: "Axton", 5: "Gaige", 6: "Krieg"}
+            amount = num
+            skills: List[str] = []
+            chosen = []
+            for skill, data in item_data_table.items():
+                if data.character == characters[character]:
+                    weight = data.count
+                    while weight > 0:
+                        skills.append(skill)
+                        weight -= 1
+            self.random.shuffle(skills)
+            while amount > 0:
+                chosen.append(skills.pop())
+                amount -= 1
+            print(chosen)
+            return chosen
+
         # Skill points or character-specific skills next
-        if self.selected_chara == 0:
-            borderlands2_items += [self.create_item("Skill Point") for _ in range(self.options.max_level - 3)]
+        if self.selected_chara == 0 and self.skill_rando == 1:
+            borderlands2_items += [self.create_item("Skill Point") for _ in range(self.pooled_skills)]
+        elif self.selected_chara > 0 and self.skill_rando == 2:
+            skills = get_skills(self.selected_chara, self.pooled_skills)
+            for skill in skills:
+                skill_item = self.create_item(skill)
+                borderlands2_items.append(skill_item)
+
 
         self.multiworld.itempool += borderlands2_items
 

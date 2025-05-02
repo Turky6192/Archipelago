@@ -73,7 +73,7 @@ class SkillRandom(Choice):
 
 	- **Vanilla:** You receive a skill point on level up and can use it as normal.
 	- **Points in Pool:** No longer receive skill points on level up, will instead receive them as items up to an amount determined by your "Max Level" and "Extra Points" options.
-	- **Skills in Pool:** Only applicable if a specific character is set in your options. Adds a random selection of your character's skills as items up to an amount determined by your "Max Level" and "Extra Points" options.
+	- **Skills in Pool:** Only usable if a specific character is set in your options. Adds a random selection of your character's skills as items up to an amount determined by your "Max Level" and "Extra Points" options.
 	"""
     display_name = "Skill Randomization"
     option_vanilla = 0
