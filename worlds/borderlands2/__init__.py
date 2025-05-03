@@ -149,16 +149,10 @@ class Borderlands2World(World):
             for location in self.get_region(region_name).locations:
                 set_rule(self.multiworld.get_location(location.name, self.player),
                          lambda state, value=min(region_index_list[region_name], 18): state.has("Progressive Story Mission", self.player, value))
-            if region_index_list[region_name] > 0 > 19:
+            if region_index_list[region_name] < 19:
                 set_rule(self.get_entrance(f"Story Progress {region_index_list[region_name] + 1}"),
                          lambda state, value=min(region_index_list[region_name], 18): state.has("Progressive Story Mission", self.player, value))
 
-        # for location in self.get_region("Meet Knuckle Dragger").locations:
-        #     set_rule(self.multiworld.get_location(location.name, self.player), lambda state: state.has("Progressive Story Mission", self.player, 1))
-        # set_rule(self.get_entrance("Story Progress 1"), lambda state: state.has("Progressive Story Mission", self.player, 1))
-        # for location in self.get_region("Meet Hammerlock").locations:
-        #     set_rule(self.multiworld.get_location(location.name, self.player), lambda state: state.has("Progressive Story Mission", self.player, 2))
-        # set_rule(self.get_entrance("Story Progress 2"), lambda state: state.has("Progressive Story Mission", self.player, 2))
 
     #
     # def connect_entrances(self) -> None:
