@@ -46,4 +46,10 @@ def chara_skill_build():
 
 #chara_skill_build()
 
+from Locations import optional_mission_list
 
+def optional_item_build():
+    for mission in optional_mission_list:
+        print(f"""  "{mission} Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),""")
+
+#optional_item_build()

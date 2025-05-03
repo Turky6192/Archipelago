@@ -233,3 +233,4 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
 }
 
 location_table = {name: 61 + id for id, (name, data) in enumerate(location_data_table.items()) if "Event" != data.type}
+optional_mission_list = [name for name,data in location_data_table.items() if data.type == "Optional Mission"]
