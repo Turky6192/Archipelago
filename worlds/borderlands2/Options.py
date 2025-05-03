@@ -127,6 +127,12 @@ class Chestsanity(Toggle):
     display_name = "Chestsanity"
 
 
+class Doorsanity(Toggle):
+    """
+    Locks access to every area that requires an interaction with a key named "{area} Key"
+    """
+    display_name = "Doorsanity"
+
 @dataclass
 class Borderlands2Options(PerGameCommonOptions):
     character: Character
@@ -139,3 +145,4 @@ class Borderlands2Options(PerGameCommonOptions):
     badass_level: BadassLevel
     max_level: MaxLevel
     chestsanity: Chestsanity
+    doorsanity: Doorsanity
