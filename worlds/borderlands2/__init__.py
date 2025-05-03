@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import logging
 from typing import List, Dict
 
 from Options import OptionError
@@ -11,8 +13,6 @@ from .Locations import *
 from .Options import Borderlands2Options
 from .Regions import *
 from .Rules import *
-from ..sc2 import get_locations
-from ..smw.Names.LocationName import menu_region
 
 
 class Borderlands2Web(WebWorld):
@@ -47,8 +47,9 @@ class Borderlands2World(World):
         self.skill_rando = self.options.skill_randomization
         self.pooled_skills = self.options.max_level - 3 + self.options.extra_skills
         if self.selected_chara == 0 and self.skill_rando == 2:
-            raise OptionError(f"Borderlands 2: Player {self.player} ({self.player_name} has Skill Randomization set to"
-                              f" 'Skills in Pool' but did not select a specific character.")
+            logging.warning("Borderlands 2: Player %s (%s has Skill Randomization set to "
+                              "'Skills in Pool' but did not select a specific character. Using 'Points in Pool instead.",
+                            self.player, self.player_name)
 
         # Verify that the player can reach all level locations wanted with chosen DLC options
         selected_dlc = list(self.options.allowed_dlc)
@@ -105,7 +106,6 @@ class Borderlands2World(World):
 
         def get_skills(character, num) -> List[str]:
             characters = {1: "Salvador", 2: "Zero", 3: "Maya", 4: "Axton", 5: "Gaige", 6: "Krieg"}
-            amount = num
             skills: List[str] = []
             chosen = []
             for skill, data in item_data_table.items():
@@ -113,15 +113,15 @@ class Borderlands2World(World):
                     for _ in range(data.count):
                         skills.append(skill)
             self.random.shuffle(skills)
-            for _ in range(amount):
+            for _ in range(num):
                 chosen.append(skills.pop())
             return chosen
 
         # Skill points or character-specific skills next
-        if self.selected_chara == 0 and self.skill_rando == 1:
+        if self.selected_chara == 0 and self.skill_rando > 0 or self.selected_chara > 0 and self.skill_rando == 1:
             borderlands2_items += [self.create_item("Skill Point") for _ in range(self.pooled_skills)]
         elif self.selected_chara > 0 and self.skill_rando == 2:
-            skills = get_skills(self.selected_chara, self.pooled_skills)
+            skills = get_skills(self.selected_chara, self.pooled_skills + 5)
             for skill in skills:
                 skill_item = self.create_item(skill)
                 borderlands2_items.append(skill_item)
@@ -148,10 +148,17 @@ class Borderlands2World(World):
         for region_name in story_region_names:
             for location in self.get_region(region_name).locations:
                 set_rule(self.multiworld.get_location(location.name, self.player),
-                         lambda state, value=min(region_index_list[region_name], 18): state.has("Progressive Story Mission", self.player, value))
-            if region_index_list[region_name] < 19:
+                         lambda state, value=min(region_index_list[region_name], 18):
+                         state.has("Progressive Story Mission", self.player, value))
+            if 19 > region_index_list[region_name] > 4 and self.skill_rando > 0:
                 set_rule(self.get_entrance(f"Story Progress {region_index_list[region_name] + 1}"),
-                         lambda state, value=min(region_index_list[region_name], 18): state.has("Progressive Story Mission", self.player, value))
+                         lambda state, value=min(region_index_list[region_name], 18): state.has(
+                             "Progressive Story Mission", self.player, value) and
+                         state.has_from_list(skill_items, self.player, int(value * 1.8 - 5)))
+            elif region_index_list[region_name] < 19:
+                set_rule(self.get_entrance(f"Story Progress {region_index_list[region_name] + 1}"),
+                         lambda state, value=min(region_index_list[region_name], 18):
+                         state.has("Progressive Story Mission", self.player, value))
 
 
     #
