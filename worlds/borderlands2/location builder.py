@@ -48,23 +48,36 @@ def chara_skill_build():
 
 #from Locations import optional_mission_list
 
-def optional_item_build():
-    for mission in optional_mission_list:
-        print(f"""  "{mission} Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),""")
+# def optional_item_build():
+#     for mission in optional_mission_list:
+#         print(f"""  "{mission} Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),""")
 
 #optional_item_build()
 
-boss_list = [('Assassin Oney*',), ('Assassin Reeth*',), ('Assassin Rouf*',), ('Assassin Wot*',), ('Bad Maw**',),
+boss_list = [('Assassin Oney', "Southpaw Steam and Power", 3, "Assassinate the Assassins"), ('Assassin Reeth', "Southpaw Steam and Power", 3, "Assassinate the Assassins"),
+             ('Assassin Rouf', "Southpaw Steam and Power", 3, "Assassinate the Assassins"), ('Assassin Wot', "Southpaw Steam and Power", 3, "Assassinate the Assassins"),
+             ('Bad Maw**',),
              ('Bagman*',), ('Bloodwing/Son of Mothrakk**',), ('Blue*',), ('BNK-3R**',), ('Boll*',), ('Bone Head 2.0',),
-             ('Boom Bewm**',), ('Captain Flynt**',), ('Deputy Winger*',), ('Doc Mercy*',), ('Donkey Mong*',),
+             ('Boom Bewm', "Southern Shelf", 3), ('Captain Flynt', "Southern Shelf", 3),
+             ('Deputy Winger*',), ('Doc Mercy', "Three Horns Valley", 5, "Medical Mystery"), ('Donkey Mong*',),
              ("Dukino's Mom*",), ('Flinter*',), ('Foreman Jasper*',), ('Gettle*',), ('Glutinous Thresher**',),
              ('Handsome Jack**',), ('Henry*',), ('Hunter Hellquist*',), ('Incinerator Clayton*',),
-             ("Jack's Body Double**",), ('King Mong',), ('Knuckledragger**',), ('Laney White*',),
+             ("Jack's Body Double**",), ('King Mong',), ('Knuckledragger', "Windshear Waste", 1), ('Laney White*',),
              ('Lee, Dan, Mick and Ralph*',), ('Loader #1340',), ('Mad Dog*',), ('Mad Mike',), ('Madame Von Bartlesby*',),
-             ('Mal*',), ('McNally*',), ('Mick Zaford or Tector and Jimbo Hodunk*',), ('Midge-Mong*',), ('Mobley*',),
+             ('Mal*',), ('McNally*',), ('Mick Zaford or Tector and Jimbo Hodunk*',), ('Midge-Mong', "Southern Shelf Bay", 2, "Symbiosis"), ('Mobley*',),
              ('Mortar**',), ('Old Slappy*',), ('Prospector Zeke*',), ('Rakkman*',), ('Requisition Officer*',),
              ('Saturn**',), ('Savage Lee*',), ('Scorch*',), ('Sheriff Nisha of Lynchwood*',), ('Shorty*',),
              ('Sinkhole*',), ('Smash Head*',), ('Spycho*',), ('Terramorphous*',), ('The Black Queen',),
              ('The Warrior**',), ('W4R-D3N**',), ('Wilhelm**',)]
 
+def boss_location_builder(boss: tuple):
+    if len(boss) == 4:
+        print(f""""Kill {boss[0]}": Borderlands2LocationData(in_game_region="{boss[1]}", story_region={boss[2]}, type="Boss", prereq_mission={boss[3]},)""")
+    if len(boss) == 3:
+        print(f""""Kill {boss[0]}": Borderlands2LocationData(in_game_region="{boss[1]}", story_region={boss[2]}, type="Boss",)""")
 
+# def region_key_item():
+#     for region in in_game_regions_map.keys():
+#         print(f""""{region} Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),""")
+#
+# region_key_item()

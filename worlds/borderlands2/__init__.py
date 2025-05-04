@@ -96,15 +96,15 @@ class Borderlands2World(World):
         else:
             for region_name, exits in in_game_regions_map.items():
                 region = self.get_region(region_name)
-                region.add_exits(exit)
+                region.add_exits(exits)
 
 
         self.multiworld.get_location("Kill Jack", self.player).place_locked_item(self.create_event("Victory"))
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
         set_rule(self.multiworld.get_location("Kill Jack", self.player), lambda state: state.has("Progressive Story Mission", self.player, 18))
 
-        #from Utils import visualize_regions
-        #visualize_regions(self.multiworld.get_region("Meet Claptrap", self.player), "my_world.puml")
+        # from Utils import visualize_regions
+        # visualize_regions(self.multiworld.get_region("Meet Claptrap", self.player), "my_world.puml")
 
     def create_item(self, name: str) -> Borderlands2Item:
         item_data = item_data_table[name]
@@ -118,6 +118,11 @@ class Borderlands2World(World):
         borderlands2_items: List[Borderlands2Item] = []
         # Story missions are the main bottleneck so they always need added
         borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(18)]
+
+        if self.options.doorsanity:
+            for key, data in item_data_table.items():
+                if data.type == "Region Key":
+                    borderlands2_items += self.create_item(key)
 
         def get_skills(character, num) -> List[str]:
             characters = {1: "Salvador", 2: "Zero", 3: "Maya", 4: "Axton", 5: "Gaige", 6: "Krieg"}

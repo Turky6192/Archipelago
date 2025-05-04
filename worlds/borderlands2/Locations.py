@@ -1,4 +1,4 @@
-from typing import List, Dict, NamedTuple, Optional, TYPE_CHECKING
+from typing import List, Dict, Tuple, NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Location
 
@@ -13,6 +13,7 @@ class Borderlands2LocationData(NamedTuple):
     story_region: int
     type: str
     dlc: Optional[List[str]] = None
+    prereq_mission: Optional[List[str]] = None
     locked_item: Optional[str] = None
 
 dlc_names = ["Pirate's Booty", "Campaign of Carnage", "Big Game Hunt", "Assault on Dragon Keep", "UVHM 1", "UVHM 2",
@@ -234,3 +235,33 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
 
 location_table = {name: 61 + id for id, (name, data) in enumerate(location_data_table.items()) if "Event" != data.type}
 optional_mission_list = [name for name,data in location_data_table.items() if data.type == "Optional Mission"]
+
+optionals_w_prereq = [{"Bad Hair Day": ("This Town Ain't Big Enough",)}, {"Shielded Favors": ("This Town Ain't Big Enough",)},
+                      {"Symbiosis": ("Shielded Favors",)}, {"Rock, Paper, Genocide: Shock Weapons!": ("Rock, Paper, Genocide: Fire Weapons!",)},
+                      {"Rock, Paper, Genocide: Corrosive Weapons!": ("Rock, Paper, Genocide: Shock Weapons!",)},
+                      {"Rock, Paper, Genocide: Slag Weapons!": ("Rock, Paper, Genocide: Corrosive Weapons!",)},
+                      {"Medical Mystery": ("Do No Harm",)}, {"Medical Mystery: X-Com-municate": ("Medical Mystery",)},
+                      {"Neither Rain Nor Sleet Nor Skag": ("No Vacancy",)},
+                      {"Cult Following: False Idols": ("Cult Following: Eternal Flame",)},
+                      {"Cult Following: Lighting The Match": ("Cult Following: False Idols",)},
+                      {"Cult Following: The Enkindling": ("Cult Following: Lighting The Match",)},
+                      {"You Are Cordially Invited: RSVP": ("You Are Cordially Invited: Party Prep",)},
+                      {"You are Cordially Invited: Tea Party": ("You are Cordially Invited: RSVP",)},
+                      {"The Pretty Good Train Robbery": ("Mine, All Mine",)},
+                      {"Bandit Slaughter: Round 2": ("Bandit Slaughter: Round 1",)}, {"Bandit Slaughter: Round 3": ("Bandit Slaughter: Round 2",)},
+                      {"Bandit Slaughter: Round 4": ("Bandit Slaughter: Round 3",)}, {"Bandit Slaughter: Round 5": ("Bandit Slaughter: Round 4",)},
+                      {"Best Mother's Day Ever": ("Stalker of Stalkers",)}, {"Nore for Self-Person": ("The Cold Shoulder",)},
+                      {"Clan War: First Place": ("Clan War: Starting the War",)}, {"Clan War: Reach the Dead Drop": ("Clan War: First Place",)},
+                      {"Clan War: End of the Rainbow": ("Clan War: Reach the Dead Drop",)}, {"Clan War: Trailer Trashing": ("Clan War: End of the Rainbow",)},
+                      {"Clan War: Wakey Wakey": ("Clan War: Trailer Trashing",)}, {"Clan War: Zafords vs. Hodunks": ("Clan War: Wakey Wakey",)},
+                      {"The Overlooked: Shields Up": ("The Overlooked: Medicine Man",)}, {"The Overlooked: This is Only a Test": ("The Overlooked: Shields Up",)},
+                      {"Torture Chairs": ("Hidden Journals",)}, {"Defend Slab Tower": ("Rocko's Modern Strife",)},
+                      {"Showdown": ("3:10 to Kaboom", "Breaking The Bank")}, {"Animal Rescue: Food": ("Animal Rescue: Medicine",)},
+                      {"Animal Rescue: Shelter": ("Animal Rescue: Food",)}, {"Demon Hunter": ("Animal Rescue: Shelter",)},
+                      {"Hyperion Slaughter: Round 2": ("Hyperion Slaughter: Round 1",)}, {"Hyperion Slaughter: Round 3": ("Hyperion Slaughter: Round 2",)},
+                      {"Hyperion Slaughter: Round 4": ("Hyperion Slaughter: Round 3",)}, {"Hyperion Slaughter: Round 5": ("Hyperion Slaughter: Round 4",)},
+                      {"Monster Mash: Part 2": ("Monster Mash: Part 1",)}, {"Monster Mash: Part 3": ("Monster Mash: Part 2",)},
+                      {"A Real Boy: Face Time": ("A Real Boy: Clothes Make the Man",)}, {"A Real Boy: Human": ("A Real Boy: Face Time",)},
+
+
+                      ]

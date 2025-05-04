@@ -1,7 +1,6 @@
 import typing
 
-from Options import Toggle, Range, Choice, DeathLink, OptionSet, PerGameCommonOptions, OptionGroup, Removed, \
-    DefaultOnToggle
+from Options import Toggle, Range, Choice, DeathLink, OptionSet, PerGameCommonOptions, OptionGroup, Removed, DefaultOnToggle
 from dataclasses import dataclass
 
 from .Locations import dlc_names
