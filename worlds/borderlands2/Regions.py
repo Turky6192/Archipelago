@@ -43,9 +43,9 @@ story_regions = [meet_claptrap, meet_knuckle_dragger, meet_hammerlock, meet_flyn
                  meet_roland, meet_wilhelm, raise_sanctuary, find_sanctuary, meet_bloodwing, meet_brick, find_opportunity,
                  meet_angel, rolands_death, find_arid_nexus, return_to_fyrestone, meet_the_warrior, post_jack]
 
-region_location_map = dict()
+story_region_location_map = dict()
 for i in range(0, 20):
-    region_location_map[story_region_names[i]] = story_regions[i]
+    story_region_location_map[story_region_names[i]] = story_regions[i]
 
 
 arid_nexus_badlands = [name for name, data in location_data_table.items() if data.in_game_region == "Arid Nexus Badlands"]

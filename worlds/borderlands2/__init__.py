@@ -70,7 +70,7 @@ class Borderlands2World(World):
 
         for region_name in story_region_names:
             region = Region(region_name, self.player, self.multiworld)
-            mapped_loc_per_region = {name: id for name, id in self.player_location_pool.items() if name in region_location_map[region_name]}
+            mapped_loc_per_region = {name: id for name, id in self.player_location_pool.items() if name in story_region_location_map[region_name]}
             region.add_locations(mapped_loc_per_region)
             self.multiworld.regions.append(region)
 
@@ -88,22 +88,23 @@ class Borderlands2World(World):
 
         self.get_region("Meet Claptrap").add_exits(["Windshear Waste"])
 
-        for region_name, exits in in_game_regions_map.items():
-            region = self.get_region(region_name)
-            if self.options.doorsanity:
+        if self.options.doorsanity:
+            for region_name, exits in in_game_regions_map.items():
+                region = self.get_region(region_name)
                 for exit in exits:
                     region.add_exits([exit],{exit: (lambda state, key=exit: state.has(f"{exit} Key", self.player))})
-            else:
-                region.add_exits(exits)
-
+        else:
+            for region_name, exits in in_game_regions_map.items():
+                region = self.get_region(region_name)
+                region.add_exits(exit)
 
 
         self.multiworld.get_location("Kill Jack", self.player).place_locked_item(self.create_event("Victory"))
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
         set_rule(self.multiworld.get_location("Kill Jack", self.player), lambda state: state.has("Progressive Story Mission", self.player, 18))
 
-        from Utils import visualize_regions
-        visualize_regions(self.multiworld.get_region("Meet Claptrap", self.player), "my_world.puml")
+        #from Utils import visualize_regions
+        #visualize_regions(self.multiworld.get_region("Meet Claptrap", self.player), "my_world.puml")
 
     def create_item(self, name: str) -> Borderlands2Item:
         item_data = item_data_table[name]
@@ -173,10 +174,10 @@ class Borderlands2World(World):
             region_count += 1
 
         for region_name in story_region_names:
-            for location in self.get_region(region_name).locations:
-                set_rule(self.multiworld.get_location(location.name, self.player),
-                         lambda state, value=min(region_index_list[region_name], 18):
-                         state.has("Progressive Story Mission", self.player, value))
+            # for location in self.get_region(region_name).locations:
+            #     set_rule(self.multiworld.get_location(location.name, self.player),
+            #              lambda state, value=min(region_index_list[region_name], 18):
+            #              state.has("Progressive Story Mission", self.player, value))
             if 19 > region_index_list[region_name] > 4 and self.options.skill_randomization > 0:
                 set_rule(self.get_entrance(f"Story Progress {region_index_list[region_name] + 1}"),
                          lambda state, value=min(region_index_list[region_name], 18): state.has(
@@ -186,7 +187,6 @@ class Borderlands2World(World):
                 set_rule(self.get_entrance(f"Story Progress {region_index_list[region_name] + 1}"),
                          lambda state, value=min(region_index_list[region_name], 18):
                          state.has("Progressive Story Mission", self.player, value))
-
 
     #
     # def connect_entrances(self) -> None:

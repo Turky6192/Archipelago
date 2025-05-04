@@ -46,10 +46,25 @@ def chara_skill_build():
 
 #chara_skill_build()
 
-from Locations import optional_mission_list
+#from Locations import optional_mission_list
 
 def optional_item_build():
     for mission in optional_mission_list:
         print(f"""  "{mission} Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),""")
 
 #optional_item_build()
+
+boss_list = [('Assassin Oney*',), ('Assassin Reeth*',), ('Assassin Rouf*',), ('Assassin Wot*',), ('Bad Maw**',),
+             ('Bagman*',), ('Bloodwing/Son of Mothrakk**',), ('Blue*',), ('BNK-3R**',), ('Boll*',), ('Bone Head 2.0',),
+             ('Boom Bewm**',), ('Captain Flynt**',), ('Deputy Winger*',), ('Doc Mercy*',), ('Donkey Mong*',),
+             ("Dukino's Mom*",), ('Flinter*',), ('Foreman Jasper*',), ('Gettle*',), ('Glutinous Thresher**',),
+             ('Handsome Jack**',), ('Henry*',), ('Hunter Hellquist*',), ('Incinerator Clayton*',),
+             ("Jack's Body Double**",), ('King Mong',), ('Knuckledragger**',), ('Laney White*',),
+             ('Lee, Dan, Mick and Ralph*',), ('Loader #1340',), ('Mad Dog*',), ('Mad Mike',), ('Madame Von Bartlesby*',),
+             ('Mal*',), ('McNally*',), ('Mick Zaford or Tector and Jimbo Hodunk*',), ('Midge-Mong*',), ('Mobley*',),
+             ('Mortar**',), ('Old Slappy*',), ('Prospector Zeke*',), ('Rakkman*',), ('Requisition Officer*',),
+             ('Saturn**',), ('Savage Lee*',), ('Scorch*',), ('Sheriff Nisha of Lynchwood*',), ('Shorty*',),
+             ('Sinkhole*',), ('Smash Head*',), ('Spycho*',), ('Terramorphous*',), ('The Black Queen',),
+             ('The Warrior**',), ('W4R-D3N**',), ('Wilhelm**',)]
+
+
