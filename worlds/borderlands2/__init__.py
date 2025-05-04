@@ -193,6 +193,10 @@ class Borderlands2World(World):
                          lambda state, value=min(region_index_list[region_name], 18):
                          state.has("Progressive Story Mission", self.player, value))
 
+    def pre_fill(self) -> None:
+        self.multiworld.early_items[self.player]["Progressive Story Mission"] = 1
+        if self.options.doorsanity:
+            self.multiworld.early_items[self.player]["Southern Shelf Key"] = 1
     #
     # def connect_entrances(self) -> None:
     #     """Method to finalize the source and target regions of the World's entrances"""
@@ -203,10 +207,6 @@ class Borderlands2World(World):
     #     Useful for randomizing things that don't affect logic but are better to be determined before the output stage.
     #     i.e. checking what the player has marked as priority or randomizing enemies
     #     """
-    #     pass
-    #
-    # def pre_fill(self) -> None:
-    #     """Optional method that is supposed to be used for special fill stages. This is run *after* plando."""
     #     pass
     #
     # def fill_hook(self,
