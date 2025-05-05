@@ -20,6 +20,11 @@ class Borderlands2ItemData(NamedTuple):
 
 item_data_table: Dict[str, Borderlands2ItemData] = {
     "Progressive Story Mission": Borderlands2ItemData(type="Story Mission", i_class=IC.progression, count=18),
+    "The Corpse of Ug-Thak, Lord of Skags": Borderlands2ItemData(type="Claptrap Item", i_class=IC.progression_skip_balancing),
+    "The Lost Staff of Mount Schuler": Borderlands2ItemData(type="Claptrap Item", i_class=IC.progression_skip_balancing),
+    "The Head of The Destroyer of Worlds": Borderlands2ItemData(type="Claptrap Item", i_class=IC.progression_skip_balancing),
+    "Default Dance Emote": Borderlands2ItemData(type="Claptrap Item", i_class=IC.progression_skip_balancing),
+    "Brown Rock": Borderlands2ItemData(type="Claptrap Item", i_class=IC.progression_skip_balancing),
     "Common Item": Borderlands2ItemData(type="Filler"),
     "Uncommon Item": Borderlands2ItemData(type="Filler"),
     "Rare Item": Borderlands2ItemData(type="Filler"),
@@ -113,7 +118,7 @@ item_data_table: Dict[str, Borderlands2ItemData] = {
     "Animal Rescue: Medicine Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
     "Animal Rescue: Food Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
     "Animal Rescue: Shelter Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
-    "BFFs Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
+    "Truxican Standoff Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
     "Bearer of Bad News Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
     "Demon Hunter Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
     "Hyperion Slaughter: Round 1 Unlock": Borderlands2ItemData(type="Optional Mission", i_class=IC.progression),
@@ -394,3 +399,4 @@ item_table = {name: 61 + id for id, (name, data) in enumerate(item_data_table.it
 filler_items = [name for name, data in item_data_table.items() if data.type == "Filler"]
 skill_items = [name for name,data in item_data_table.items() if data.type == "Skill" or data.type == "Point"]
 optional_mission_items = [name for name, data in item_data_table.items() if data.type == "Optional Mission"]
+claptrap_items = [name for name, data in item_data_table.items() if data.type == "Claptrap Item"]

@@ -26,7 +26,6 @@ class Borderlands2World(World):
     options_dataclass = Borderlands2Options
     item_name_to_id = item_table
     location_name_to_id = location_table
-    explicit_indirect_conditions: False
 
     selected_dlc: List[str] = []
     origin_region_name = "Meet Claptrap"
@@ -55,6 +54,7 @@ class Borderlands2World(World):
                                   f" enabled to reach desired Max Level ({self.options.max_level}).)")
 
     def create_regions(self) -> None:
+        # Current just use this for the level removal
         self.player_location_pool = self.location_name_to_id.copy()
 
         # Removes levels from location pool above selected max level
@@ -62,43 +62,37 @@ class Borderlands2World(World):
             for level in range(self.options.max_level + 1, 81):
                 del self.player_location_pool[f"Level {level}"]
 
-        # Try to help gen by reducing the number of potential "key->one check" prog locations
-        working_opt_mission = optional_mission_list.copy()
-        self.random.shuffle(working_opt_mission)
-        if self.options.exclude_terramorphous:
-            working_opt_mission.remove("You. Will. Die. (Seriously.)")
-            self.excluded_opt_missions.append("You. Will. Die. (Seriously.)")
-        for _ in range(len(working_opt_mission) // 4):
-            excluded = working_opt_mission.pop()
-            self.excluded_opt_missions.append(excluded)
 
+
+        # Making the story regions
         for region_name in story_region_names:
             region = Region(region_name, self.player, self.multiworld)
             mapped_loc_per_region = {name: id for name, id in self.player_location_pool.items() if name in story_region_location_map[region_name]}
             region.add_locations(mapped_loc_per_region)
+            terra_locs = [name for name, data in location_data_table.items() if data.in_game_region == "Terramorphous Peak"]
+            # Might as well alter the locations needed, while adding them to each main region
             for location in region.get_locations():
-                if location.name in self.excluded_opt_missions:
-                    location.progress_type = LocationProgressType.EXCLUDED
+                # Add the Unlock items for Optional Missions
                 if location.name in optional_mission_list:
                     location.access_rule = lambda state, name=location.name: state.has(f"{name} Unlock", self.player)
                     forbid_item(self.multiworld.get_location(location.name, self.player), f"{location.name} Unlock", self.player)
-                if location.name == "Kill Terramorphous" and self.options.exclude_terramorphous:
+                # Exclude Terramorphous
+                if  self.options.exclude_terramorphous == 1 and location.name in terra_locs:
                     location.progress_type = LocationProgressType.EXCLUDED
+                # Give bosses that require an Optional Mission to access the proper requirements
                 if location.name.startswith("Kill ") and location.name != "Kill Yourself":
                     boss_reqs = next((data.prereq_mission for name, data in location_data_table.items() if name == location.name), None)
                     if boss_reqs:
                         location.access_rule = lambda state, name=boss_reqs: state.can_reach(self.multiworld.get_location(f"{name}", self.player))
                         forbid_item(self.multiworld.get_location(location.name, self.player), f"{boss_reqs} Unlock", self.player)
-                if self.options.doorsanity:
+                # Set door-sanity logic and forbid Keys from being put in the region they unlock
+                if self.options.doorsanity == 1:
                     loc_game_region = next((data.in_game_region for name, data in location_data_table.items() if name == location.name and data.in_game_region != "Player"), None)
                     if loc_game_region:
                         add_rule(location, lambda state, game_region=loc_game_region: state.can_reach(self.get_region(game_region), self.player))
                         forbid_item(self.multiworld.get_location(location.name, self.player), f"{loc_game_region} Key", self.player)
-
+            # Finally add the region to the world
             self.multiworld.regions.append(region)
-
-        jack_region = self.get_region("Meet The Warrior")
-        jack_region.locations.append(Borderlands2Location(self.player, "Kill Jack", None, jack_region))
 
         # Story region entrances so they can be given rules
         for exit_index, region_name in enumerate(story_region_names[:-1]):
@@ -106,29 +100,43 @@ class Borderlands2World(World):
             exit_region = self.get_region(story_region_names[exit_index + 1])
             region.connect(exit_region, f"Story Progress {exit_index + 1}")
 
-        for region_name in in_game_regions_map:
+        for region_name in in_game_regions_map.keys():
             region = Region(region_name, self.player, self.multiworld)
             self.multiworld.regions.append(region)
 
+        for region_name, exits in in_game_regions_map.items():
+            region = Region(region_name, self.player, self.multiworld)
+            for door in exits:
+                if self.options.doorsanity == 1:
+                    region.add_exits([door],{door: (lambda state, key=door: state.has(f"{key} Key", self.player))})
+                else:
+                    region.add_exits([door])
         self.get_region("Meet Claptrap").add_exits(["Windshear Waste"])
 
-        if self.options.doorsanity:
-            for region_name, exits in in_game_regions_map.items():
-                region = self.get_region(region_name)
-                for door in exits:
-                    region.add_exits([door],{door: (lambda state, key=door: state.has(f"{key} Key", self.player))})
-        else:
-            for region_name, exits in in_game_regions_map.items():
-                region = self.get_region(region_name)
-                region.add_exits(exits)
+        # Will only need if in game regions are wanted without doorsanity
+        #
+        # else:
+        #     for region_name, exits in in_game_regions_map.items():
+        #         region = self.get_region(region_name)
+        #         region.add_exits(exits)
 
+        # Victory conditions
+        if self.options.goal == 0:
+            jack_region = self.get_region("Meet The Warrior")
+            jack_region.locations.append(Borderlands2Location(self.player, "Kill Jack", None, jack_region))
+            self.multiworld.get_location("Kill Jack", self.player).place_locked_item(self.create_event("Victory"))
+            self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
+            set_rule(self.multiworld.get_location("Kill Jack", self.player), lambda state: state.has("Progressive Story Mission", self.player, 18))
+        elif self.options.goal == 1:
+            claptrap_region = self.get_region("Meet Claptrap")
+            claptrap_region.locations.append(Borderlands2Location(self.player, "Completed Claptrap's Quest", None, claptrap_region))
+            self.multiworld.get_location("Completed Claptrap's Quest", self.player).place_locked_item(self.create_event("Victory"))
+            self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
+            set_rule(self.multiworld.get_location("Completed Claptrap's Quest", self.player),
+                     lambda state: state.has_from_list(claptrap_items, self.player, 4 + self.options.claptrap_count))
 
-        self.multiworld.get_location("Kill Jack", self.player).place_locked_item(self.create_event("Victory"))
-        self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
-        set_rule(self.multiworld.get_location("Kill Jack", self.player), lambda state: state.has("Progressive Story Mission", self.player, 18))
-
-        # from Utils import visualize_regions
-        # visualize_regions(self.multiworld.get_region("Meet Claptrap", self.player), "my_world.puml")
+        from Utils import visualize_regions
+        visualize_regions(self.multiworld.get_region("Meet Claptrap", self.player), "my_world.puml")
 
     def create_item(self, name: str) -> Borderlands2Item:
         item_data = item_data_table[name]
@@ -141,9 +149,53 @@ class Borderlands2World(World):
     def create_items(self) -> None:
         borderlands2_items: List[Borderlands2Item] = []
         # Story missions are the main bottleneck so they always need added
-        borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(18)]
+        borderlands2_items.append(self.create_item("Progressive Story Mission"))
+        mw_games = [game.game for game in self.multiworld.worlds.values()]
+        if not "Borderlands 2" in mw_games:
+            borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(18)]
+            self.multiworld.early_items[self.player]["Progressive Story Mission"] = 1
+            if self.options.doorsanity == 1:
+                self.multiworld.early_items[self.player]["Southern Shelf Key"] = 1
+        else:
+            if self.options.doorsanity == 1:
+                for region in story_region_names[1:10]:
+                    while story_region_names.index(region) == 1:
+                        location = self.random.choice(self.get_region(region).get_locations())
+                        while location.item != None:
+                            location = self.random.choice(self.get_region(region).get_locations())
+                        item = self.create_item("Progressive Story Mission")
+                        self.multiworld.get_location(location.name, self.player).place_locked_item(item)
+                        continue
+                    while story_region_names.index(region) > 1:
+                        location = self.random.choice(self.get_region(region).get_locations())
+                        second = self.random.choice(self.get_region(region).get_locations())
+                        while location.name == second.name or second.item != None:
+                            second = self.random.choice(self.get_region(region).get_locations())
+                        item = self.create_item("Progressive Story Mission")
+                        self.multiworld.get_location(location.name, self.player).place_locked_item(item)
+                        self.multiworld.get_location(second.name, self.player).place_locked_item(item)
+                        continue
+            else:
+                for region in story_region_names[1:18]:
+                    location = self.random.choice(self.get_region(region).get_locations())
+                    item = self.create_item("Progressive Story Mission")
+                    self.multiworld.get_location(location.name, self.player).place_locked_item(item)
 
-        if self.options.doorsanity:
+
+        # item = self.create_item("Herb")
+        # self.multiworld.get_location("Chest1", self.player).place_locked_item(item)
+
+        # Adding Claptrap items, our MacGuffin goal items
+        if self.options.goal == 1:
+            for item in claptrap_items:
+                if item == "Brown Rock":
+                    borderlands2_items += [self.create_item(item) for _ in range(self.options.claptrap_count)]
+                else:
+                    borderlands2_items.append(self.create_item(item))
+
+
+        # Doorsanity keys
+        if self.options.doorsanity == 1:
             for key, data in item_data_table.items():
                 if data.type == "Region Key":
                     borderlands2_items.append(self.create_item(key))
@@ -166,19 +218,15 @@ class Borderlands2World(World):
         if self.options.character == 0 or self.options.character > 0 and self.options.skill_randomization < 2:
             borderlands2_items += [self.create_item("Skill Point") for _ in range(self.pooled_skills)]
         elif self.options.character > 0 and self.options.skill_randomization == 2:
-            skills = get_skills(self.options.character, self.pooled_skills + 5) # Add a few extra to help synergy
+            skills = get_skills(self.options.character, max(self.pooled_skills + 5, 50)) # Add a few extra to help synergy
             for skill in skills:
                 skill_item = self.create_item(skill)
                 borderlands2_items.append(skill_item)
 
-        # Change keys for missions that got excluded to prog_skip
+        # Create keys for Optional Missions
         for item in optional_mission_items:
-            if item.removesuffix(" Unlock") in self.excluded_opt_missions:
-                excluded_item = Borderlands2Item(item, ItemClassification.progression_skip_balancing, self.item_name_to_id[item], self.player)
-                borderlands2_items.append(excluded_item)
-            else:
-                opt_mission_item = self.create_item(item)
-                borderlands2_items.append(opt_mission_item)
+            opt_mission_item = self.create_item(item)
+            borderlands2_items.append(opt_mission_item)
 
         self.multiworld.itempool += borderlands2_items
         remaining_locs = len(self.multiworld.get_unfilled_locations(self.player)) - len(borderlands2_items)
@@ -193,14 +241,6 @@ class Borderlands2World(World):
     def set_rules(self) -> None:
     #     """Method for setting the rules on the World's regions and locations."""
 
-    # Moved to create_regions, should be faster?
-    #     for location in self.get_locations():
-    #         if location.name in self.excluded_opt_missions:
-    #             location.progress_type = LocationProgressType.EXCLUDED
-    #         if location.name in optional_mission_list:
-    #             set_rule(self.multiworld.get_location(location.name, self. player),
-    #                      lambda state, name=location.name: state.has(f"{name} Unlock", self.player))
-
         region_count = 0
         region_index_list: Dict[str, int] = {}
         for region in story_region_names:
@@ -208,10 +248,6 @@ class Borderlands2World(World):
             region_count += 1
 
         for region_name in story_region_names:
-            # for location in self.get_region(region_name).locations:
-            #     set_rule(self.multiworld.get_location(location.name, self.player),
-            #              lambda state, value=min(region_index_list[region_name], 18):
-            #              state.has("Progressive Story Mission", self.player, value))
             if 19 > region_index_list[region_name] > 4 and self.options.skill_randomization > 0:
                 set_rule(self.get_entrance(f"Story Progress {region_index_list[region_name] + 1}"),
                          lambda state, value=min(region_index_list[region_name], 18): state.has(
@@ -222,10 +258,14 @@ class Borderlands2World(World):
                          lambda state, value=min(region_index_list[region_name], 18):
                          state.has("Progressive Story Mission", self.player, value))
 
-    def pre_fill(self) -> None:
-        self.multiworld.early_items[self.player]["Progressive Story Mission"] = 1
-        if self.options.doorsanity:
-            self.multiworld.early_items[self.player]["Southern Shelf Key"] = 1
+        for region, story_progress in in_game_progress_map.items():
+            self.multiworld.register_indirect_condition(self.get_region(f"{region}"),self.get_entrance(f"Story Progress {story_progress}"))
+
+    # def pre_fill(self) -> None:
+
+
+
+
     #
     # def connect_entrances(self) -> None:
     #     """Method to finalize the source and target regions of the World's entrances"""

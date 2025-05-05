@@ -33,8 +33,8 @@ class Goal(Choice):
 	"""
     display_name = "Goal"
     option_main_story = 0
-    option_boss_hunt = 1
-    option_claptraps_quest = 2
+    option_claptraps_quest = 1
+    option_boss_hunt = 2
     default = 0
 
 

@@ -97,3 +97,34 @@ for boss in boss_list:
 #         print(f""""{region} Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),""")
 #
 # region_key_item()
+
+cult_symbol_dict = {'Arid Nexus Boneyard': 2, 'Bloodshot Ramparts': 1, 'Bloodshot Stronghold': 2, 'Caustic Caverns': 2,
+                    'End of the Line': 1, 'Eridium Blight': 3, "Fink's Slaughterhouse": 1, 'Friendship Gulag': 1,
+                    'Frostburn Canyon': 2, "Hero's Pass": 2, 'Lynchwood': 2, 'Natural Selection Annex': 1, 'Opportunity': 2,
+                    'Ore Chasm': 1, 'Sanctuary': 5, 'Sanctuary Hole': 1, 'Sawtooth Cauldron': 2, 'Southern Shelf': 2,
+                    'Southern Shelf Bay': 2, 'Southpaw Steam & Power': 3, 'Terramorphous Peak': 2, 'The Bunker': 1,'The Dust': 3,
+                    'The Fridge': 2, 'The Highlands': 1, 'The Holy Spirits': 1, 'Thousand Cuts': 2, 'Three Horns Divide': 3,
+                    'Three Horns Valley': 3, 'Tundra Express': 2, 'Vault of the Warrior': 1, 'Wildlife Exploitation Preserve': 2}
+
+def cult_loc_build(d):
+    for loc, amount in d.items():
+        for num in range(amount):
+            print(f""""{loc} Vault Symbol {num + 1}": Borderlands2LocationData(in_game_region="{loc}", story_region=, type="Vault Symbol",),""")
+cult_loc_build(cult_symbol_dict)
+
+# def cult_symbol_build(txt: str):
+#     split = txt.splitlines()
+#     symbol_amounts: dict[str: int] = {}
+#     current_loc = ""
+#     current_count = 0
+#     for line in split:
+#         if len(line) < 32:
+#             symbol_amounts[current_loc] = current_count
+#             current_loc = line
+#             current_count = 0
+#         else:
+#             current_count += 1
+#     del symbol_amounts[""]
+#     print(f"{symbol_amounts}")
+#
+# cult_symbol_build(cult_locations)
