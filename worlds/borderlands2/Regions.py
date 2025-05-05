@@ -75,21 +75,21 @@ southpaw_steam_and_power = [name for name, data in location_data_table.items() i
 terramorphous_peak = [name for name, data in location_data_table.items() if data.in_game_region == "Terramorphous Peak"]
 the_fridge = [name for name, data in location_data_table.items() if data.in_game_region == "The Fridge"]
 the_highlands = [name for name, data in location_data_table.items() if data.in_game_region == "The Highlands"]
-the_highlands_outwash = [name for name, data in location_data_table.items() if data.in_game_region == "The Highlands Outwash"]
+highlands_outwash = [name for name, data in location_data_table.items() if data.in_game_region == "Highlands Outwash"]
 the_holy_spirits = [name for name, data in location_data_table.items() if data.in_game_region == "The Holy Spirits"]
 thousand_cuts = [name for name, data in location_data_table.items() if data.in_game_region == "Thousand Cuts"]
 three_horns_divide = [name for name, data in location_data_table.items() if data.in_game_region == "Three Horns Divide"]
 three_horns_valley = [name for name, data in location_data_table.items() if data.in_game_region == "Three Horns Valley"]
 tundra_express = [name for name, data in location_data_table.items() if data.in_game_region == "Tundra Express"]
 vault_of_the_warrior = [name for name, data in location_data_table.items() if data.in_game_region == "Vault of The Warrior"]
-wildlife_exploitation_preserve = [name for name, data in location_data_table.items() if data.in_game_region == "Willife Exploitation Preserve"]
+wildlife_exploitation_preserve = [name for name, data in location_data_table.items() if data.in_game_region == "Wildlife Exploitation Preserve"]
 windshear_waste = [name for name, data in location_data_table.items() if data.in_game_region == "Windshear Waste"]
 
 in_game_regions = [arid_nexus_badlands, arid_nexus_boneyard, bloodshot_ramparts, bloodshot_stronghold, the_bunker,
                    caustic_caverns, control_core_angel, the_dust, end_of_the_line, eridium_blight, finks_slaughterhouse,
                    friendship_gulag, frostburn_canyon, heros_pass, lynchwood, natural_selection_annex, opportunity,
                    ore_chasm, sanctuary, sanctuary_hole, sawtooth_cauldron, southern_shelf, southern_shelf_bay,
-                   southpaw_steam_and_power, terramorphous_peak, the_fridge, the_highlands, the_highlands_outwash,
+                   southpaw_steam_and_power, terramorphous_peak, the_fridge, the_highlands, highlands_outwash,
                    the_holy_spirits, thousand_cuts, three_horns_divide, three_horns_valley, tundra_express,
                    vault_of_the_warrior, wildlife_exploitation_preserve, windshear_waste]
 
@@ -109,8 +109,8 @@ in_game_regions_map: dict[str, tuple[str]] = {
     "The Fridge": ("Fink's Slaughterhouse", "Highlands Outwash", "Three Horns Valley"),
     "Fink's Slaughterhouse": tuple(),
     "Highlands Outwash": ("The Highlands", "The Fridge"),
-    "The Highlands": ("Wildlike Exploitation Preserve", "Opportunity", "The Holy Spirits", "Thousand Cuts", "Highlands Outwash", "The Dust"),
-    "Wildlike Exploitation Preserve": tuple(),
+    "The Highlands": ("Wildlife Exploitation Preserve", "Opportunity", "The Holy Spirits", "Thousand Cuts", "Highlands Outwash", "The Dust"),
+    "Wildlife Exploitation Preserve": tuple(),
     "Opportunity": tuple(),
     "The Holy Spirits": tuple(),
     "Thousand Cuts": ("Terramorphous Peak", "The Bunker"),

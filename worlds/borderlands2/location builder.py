@@ -56,26 +56,42 @@ def chara_skill_build():
 
 boss_list = [('Assassin Oney', "Southpaw Steam and Power", 3, "Assassinate the Assassins"), ('Assassin Reeth', "Southpaw Steam and Power", 3, "Assassinate the Assassins"),
              ('Assassin Rouf', "Southpaw Steam and Power", 3, "Assassinate the Assassins"), ('Assassin Wot', "Southpaw Steam and Power", 3, "Assassinate the Assassins"),
-             ('Bad Maw**',),
-             ('Bagman*',), ('Bloodwing/Son of Mothrakk**',), ('Blue*',), ('BNK-3R**',), ('Boll*',), ('Bone Head 2.0',),
+             ('Bad Maw', "The Dust", 7), ('Bagman', "The Holy Spirits", 9, "Clan War: End of the Rainbow"),
+             ('Bloodwing/Son of Mothrakk', "Wildlife Exploitation Preserve", 11), ('Blue', "Caustic Caverns", 9, "Safe and Sound"),
+             ('BNK-3R', "The Bunker", 14), ('Boll', "Three Horns Divide", 6, "In Memoriam"), ('Bone Head 2.0', "Arid Nexus Badlands", 16),
              ('Boom Bewm', "Southern Shelf", 3), ('Captain Flynt', "Southern Shelf", 3),
-             ('Deputy Winger*',), ('Doc Mercy', "Three Horns Valley", 5, "Medical Mystery"), ('Donkey Mong*',),
-             ("Dukino's Mom*",), ('Flinter*',), ('Foreman Jasper*',), ('Gettle*',), ('Glutinous Thresher**',),
-             ('Handsome Jack**',), ('Henry*',), ('Hunter Hellquist*',), ('Incinerator Clayton*',),
-             ("Jack's Body Double**",), ('King Mong',), ('Knuckledragger', "Windshear Waste", 1), ('Laney White*',),
-             ('Lee, Dan, Mick and Ralph*',), ('Loader #1340',), ('Mad Dog*',), ('Mad Mike',), ('Madame Von Bartlesby*',),
-             ('Mal*',), ('McNally*',), ('Mick Zaford or Tector and Jimbo Hodunk*',), ('Midge-Mong', "Southern Shelf Bay", 2, "Symbiosis"), ('Mobley*',),
-             ('Mortar**',), ('Old Slappy*',), ('Prospector Zeke*',), ('Rakkman*',), ('Requisition Officer*',),
-             ('Saturn**',), ('Savage Lee*',), ('Scorch*',), ('Sheriff Nisha of Lynchwood*',), ('Shorty*',),
-             ('Sinkhole*',), ('Smash Head*',), ('Spycho*',), ('Terramorphous*',), ('The Black Queen',),
-             ('The Warrior**',), ('W4R-D3N**',), ('Wilhelm**',)]
+             ('Deputy Winger', "Lynchwood", 12, "Showdown"), ('Doc Mercy', "Three Horns Valley", 5, "Medical Mystery"),
+             ('Donkey Mong', "Eridium Blight", 15), ("Dukino's Mom", "Lynchwood", 14, "Demon Hunter"),
+             ('Flinter', "Bloodshot Stronghold", 7, "Splinter Group"), ('Foreman Jasper', "Opportunity", 12, "Hell Hath No Fury"),
+             ('Gettle', "The Dust", 9, "The Good, the Bad, and the Mordecai"), ('Glutinous Thresher', "The Highland Outwash", 10),
+             ('Handsome Jack', "Vault of the Warrior", 18), ('Henry', "The Highlands", 9, "Best Mother's Day Ever"),
+             ('Hunter Hellquist', "Arid Nexus Boneyard", 16, "This Just In"),
+             ('Incinerator Clayton', "Frostburn Canyon", 6, "Cult Following: The Enkindling"),
+             ("Jack's Body Double", "Opportunity", 13), ('King Mong', "Eridium Blight", 15),('Knuckledragger', "Windshear Waste", 1),
+             ('Laney White', "The Fridge", 9, "The Cold Shoulder"), ('Lee, Dan, Mick and Ralph', "Bloodshot Stronghold", 7, "Splinter Group"),
+             ('Loader #1340', "Sanctuary", 7, "Out of Body Experience"), ('Mad Dog', "Lynchwood", 12, "Breaking the Bank"),
+             ('Mad Mike', "Bloodshot Stronghold", 7), ('Madame Von Bartlesby', "Tundra Express", 7, "You Are Cordially Invited: Party Prep"),
+             ('Mal', "Eridium Blight", 15, "A Real Boy; Human"), ('McNally', "The Dust", 12, "The Bane"),
+             ('Mick Zaford or Tector and Jimbo Hodunk', "The Dust", 9, "Clan War: Zafords vs. Hodunks"),
+             ('Midge-Mong', "Southern Shelf Bay", 2, "Symbiosis"), ('Mobley', "The Dust", 9, "The Good, the Bad, and the Mordecai"),
+             ('Mortar', "Sawtooth Cauldron", 16), ('Old Slappy', "The Highlands Outwash", 9, "Slap-Happy"),
+             ('Prospector Zeke', "Tundra Express", 8, "Mine, All Mine"), ('Rakkman', "The Fridge", 9, "Cold Shoulder"),
+             ('Requisition Officer', "The Highlands", 10, "The Overlooked: Medicine Man"),
+             ('Saturn', "Arid Nexus Badlands", 16), ('Savage Lee', "Three Horns Divide", 4),
+             ('Scorch', "Frostburn Cauldron", 6, "Cult Following: False Idols"),
+             ('Sheriff Nisha of Lynchwood', "Lynchwood", 12, "Showdown"), ('Shorty', "The Fridge", 9, "Swallowed Whole"),
+             ('Sinkhole', "The Fridge", 9, "Swallowed Whole"), ('Smash Head',),
+             ('Spycho', "The Fridge", 9, "Note for Self-Person"), ('Terramorphous', "Terramorphous Peak", 18, "You. Will. Die. (Seriously.)"),
+             ('The Black Queen', "The Dust", 7), ('The Warrior', "Vault of the Warrior", 18),
+             ('W4R-D3N', "Bloodshot Ramparts", 7), ('Wilhelm', "End of the Line", 8)]
 
 def boss_location_builder(boss: tuple):
     if len(boss) == 4:
-        print(f""""Kill {boss[0]}": Borderlands2LocationData(in_game_region="{boss[1]}", story_region={boss[2]}, type="Boss", prereq_mission={boss[3]},)""")
+        print(f""""Kill {boss[0]}": Borderlands2LocationData(in_game_region="{boss[1]}", story_region={boss[2]}, type="Boss", prereq_mission="{boss[3]}",),""")
     if len(boss) == 3:
-        print(f""""Kill {boss[0]}": Borderlands2LocationData(in_game_region="{boss[1]}", story_region={boss[2]}, type="Boss",)""")
-
+        print(f""""Kill {boss[0]}": Borderlands2LocationData(in_game_region="{boss[1]}", story_region={boss[2]}, type="Boss",),""")
+for boss in boss_list:
+    boss_location_builder(boss)
 # def region_key_item():
 #     for region in in_game_regions_map.keys():
 #         print(f""""{region} Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),""")

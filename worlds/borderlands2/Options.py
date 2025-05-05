@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from .Locations import dlc_names
 
+
 class Character(Choice):
     """
 	Choose what character to play as. Choosing 'Any' will let you decide in-game.
@@ -46,6 +47,19 @@ class AllowedDLC(OptionSet):
     display_name = "Allowed DLC"
     valid_keys = [dlc for dlc in dlc_names]
     default = [dlc for dlc in dlc_names]
+
+
+class MaxLevel(Range):
+    """
+	Sets the maximum level that logic will expect you to achieve.
+
+	**Warning:** Levels above 50 require DLC and considerably more time to potentially reach.
+	"""
+    display_name = "Max Level"
+    range_start = 30
+    range_end = 80
+    default = 36
+
 
 class BossHuntCount(Range):
     """
@@ -105,17 +119,6 @@ class BadassLevel(DefaultOnToggle):
     display_name = "Allow Badass Levels"
 
 
-class MaxLevel(Range):
-    """
-	Sets the maximum level that logic will expect you to achieve.
-
-	**Warning:** Levels above 50 require DLC and considerably more time to potentially reach.
-	"""
-    display_name = "Max Level"
-    range_start = 30
-    range_end = 80
-    default = 36
-
 
 class Chestsanity(Toggle):
     """
@@ -132,6 +135,13 @@ class Doorsanity(Toggle):
     """
     display_name = "Doorsanity"
 
+
+class ExcludeTerramorphous(DefaultOnToggle):
+    """
+    Prevents progression being placed on the "Kill Terramorphous" and "You. Will. Die. (Seriously.) locations.
+    """
+    display_name = "Exclude Terramorphous"
+
 @dataclass
 class Borderlands2Options(PerGameCommonOptions):
     character: Character
@@ -145,3 +155,4 @@ class Borderlands2Options(PerGameCommonOptions):
     max_level: MaxLevel
     chestsanity: Chestsanity
     doorsanity: Doorsanity
+    exclude_terramorphous: ExcludeTerramorphous
