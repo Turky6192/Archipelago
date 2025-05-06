@@ -94,6 +94,7 @@ in_game_regions = [arid_nexus_badlands, arid_nexus_boneyard, bloodshot_ramparts,
                    vault_of_the_warrior, wildlife_exploitation_preserve, windshear_waste]
 
 in_game_regions_map: dict[str, tuple[str]] = {
+    "Player": ("Windshear Waste",),
     "Windshear Waste": ("Southern Shelf",),
     "Southern Shelf": ("Southern Shelf Bay", "Three Horns Divide",),
     "Southern Shelf Bay": tuple(),
@@ -132,3 +133,16 @@ in_game_regions_map: dict[str, tuple[str]] = {
     "Vault of the Warrior": tuple(),
     }
 
+def sort_igrm(d):
+    for _ in range(len(d)):
+        igr_sorted = dict(sorted(d.items()))
+        return igr_sorted
+
+def build_igr_loc_map(d):
+    mapped_d = {}
+    for region in d.keys():
+        mapped_d[region] = [name for name, data in location_data_table.items() if data.in_game_region == f"{region}"]
+    return mapped_d
+
+
+in_game_region_loc_map = build_igr_loc_map(in_game_regions_map)

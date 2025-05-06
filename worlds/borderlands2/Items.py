@@ -163,6 +163,7 @@ item_data_table: Dict[str, Borderlands2ItemData] = {
     "Highlands Outwash Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),
     "The Highlands Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),
     "Wildlife Exploitation Preserve Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),
+    "Natural Selection Annex Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),
     "Opportunity Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),
     "The Holy Spirits Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),
     "Thousand Cuts Key": Borderlands2ItemData(type="Region Key", i_class=IC.progression),

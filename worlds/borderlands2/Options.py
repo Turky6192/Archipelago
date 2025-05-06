@@ -77,7 +77,7 @@ class ClaptrapCount(Range):
     """Claptrap's Secret Stash mission requires you to find "The Corpse of Ug-Thak, Lord of Skags", "The Lost Staff of Mount Schuler", "The Head of The Destroyer of Worlds", "Default Dance Emote", and a certain amount of "Brown Rock"s, as determined by this option."""
     display_name = "Brown Rocks Required"
     range_start = 2
-    range_end = 100  # Unsure how more ridiculous this could be
+    range_end = 50  # Unsure how more ridiculous this could be
     default = 14
 
 
@@ -103,7 +103,7 @@ class ExtraSkill(Range):
 	"""
     display_name = "Extra Skills/Points"
     range_start = 0
-    range_end = 50
+    range_end = 40
     default = 0
 
 # Maya max 126
@@ -138,7 +138,7 @@ class Doorsanity(Toggle):
 
 class ExcludeTerramorphous(DefaultOnToggle):
     """
-    Prevents progression being placed on the "Kill Terramorphous" and "You. Will. Die. (Seriously.) locations.
+    Prevents progression being placed on the "Kill Terramorphous", "You. Will. Die. (Seriously.)", and the 2 Cult Symbol locations.
     """
     display_name = "Exclude Terramorphous"
 
