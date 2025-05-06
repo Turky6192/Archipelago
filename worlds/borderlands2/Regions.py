@@ -131,3 +131,4 @@ in_game_regions_map: dict[str, tuple[str]] = {
     "Hero's Pass": ("Vault of the Warrior",),
     "Vault of the Warrior": tuple(),
     }
+

@@ -105,20 +105,22 @@ class Borderlands2World(World):
             self.multiworld.regions.append(region)
 
         for region_name, exits in in_game_regions_map.items():
-            region = Region(region_name, self.player, self.multiworld)
-            for door in exits:
-                if self.options.doorsanity == 1:
-                    region.add_exits([door],{door: (lambda state, key=door: state.has(f"{key} Key", self.player))})
-                else:
-                    region.add_exits([door])
+            region = self.get_region(region_name)
+            region.add_exits(exits)
+            print(exits)
+            print(region.entrances)
+            if self.options.doorsanity == 1:
+                for entrance in region.get_exits():
+                    entrance.access_rule(lambda state, key=region_name: state.has(f"{key} Key", self.player))
+
         self.get_region("Meet Claptrap").add_exits(["Windshear Waste"])
 
         # Will only need if in game regions are wanted without doorsanity
-        #
+
         # else:
-        #     for region_name, exits in in_game_regions_map.items():
-        #         region = self.get_region(region_name)
-        #         region.add_exits(exits)
+        #    for region_name, exits in in_game_regions_map.items():
+        #        region = self.get_region(region_name)
+        #        region.add_exits(exits)
 
         # Victory conditions
         if self.options.goal == 0:
@@ -150,31 +152,33 @@ class Borderlands2World(World):
         borderlands2_items: List[Borderlands2Item] = []
         # Story missions are the main bottleneck so they always need added
         borderlands2_items.append(self.create_item("Progressive Story Mission"))
+        if self.options.doorsanity == 1:
+            self.multiworld.early_items[self.player]["Southern Shelf Key"] = 1
         mw_games = [game.game for game in self.multiworld.worlds.values()]
         if not "Borderlands 2" in mw_games:
-            borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(18)]
+            borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(17)]
             self.multiworld.early_items[self.player]["Progressive Story Mission"] = 1
-            if self.options.doorsanity == 1:
-                self.multiworld.early_items[self.player]["Southern Shelf Key"] = 1
         else:
             if self.options.doorsanity == 1:
                 for region in story_region_names[1:10]:
+                    item = self.create_item("Progressive Story Mission")
                     while story_region_names.index(region) == 1:
                         location = self.random.choice(self.get_region(region).get_locations())
                         while location.item != None:
                             location = self.random.choice(self.get_region(region).get_locations())
-                        item = self.create_item("Progressive Story Mission")
                         self.multiworld.get_location(location.name, self.player).place_locked_item(item)
-                        continue
+                        break
                     while story_region_names.index(region) > 1:
                         location = self.random.choice(self.get_region(region).get_locations())
                         second = self.random.choice(self.get_region(region).get_locations())
                         while location.name == second.name or second.item != None:
                             second = self.random.choice(self.get_region(region).get_locations())
-                        item = self.create_item("Progressive Story Mission")
+                        second_item = ""
+                        potential_keys = [name for name, lowest_access in in_game_progress_map.items() if lowest_access < story_region_names.index(region)]
+                        second_item = self.create_item(f"{self.random.choice(potential_keys)} Key")
                         self.multiworld.get_location(location.name, self.player).place_locked_item(item)
-                        self.multiworld.get_location(second.name, self.player).place_locked_item(item)
-                        continue
+                        self.multiworld.get_location(second.name, self.player).place_locked_item(second_item)
+                        break
             else:
                 for region in story_region_names[1:18]:
                     location = self.random.choice(self.get_region(region).get_locations())
