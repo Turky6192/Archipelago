@@ -74,7 +74,11 @@ class BossHuntCount(Range):
 
 
 class ClaptrapCount(Range):
-    """Claptrap's Secret Stash mission requires you to find "The Corpse of Ug-Thak, Lord of Skags", "The Lost Staff of Mount Schuler", "The Head of The Destroyer of Worlds", "Default Dance Emote", and a certain amount of "Brown Rock"s, as determined by this option."""
+    """
+    Claptrap's Secret Stash mission requires you to find "The Corpse of Ug-Thak, Lord of Skags",
+    "The Lost Staff of Mount Schuler", "The Head of The Destroyer of Worlds", "Default Dance Emote",
+    and a certain amount of "Brown Rock"s, as determined by this option.
+    """
     display_name = "Brown Rocks Required"
     range_start = 2
     range_end = 50  # Unsure how more ridiculous this could be
@@ -85,8 +89,10 @@ class SkillRandom(Choice):
     """Determines how, or if, your skills are randomized.
 
 	- **Vanilla:** You receive a skill point on level up and can use it as normal.
-	- **Points in Pool:** No longer receive skill points on level up, will instead receive them as items up to an amount determined by your "Max Level" and "Extra Points" options.
-	- **Skills in Pool:** Only usable if a specific character is set in your options. Adds a random selection of your character's skills as items up to an amount determined by your "Max Level" and "Extra Points" options.
+	- **Points in Pool:** No longer receive skill points on level up, will instead receive them as items up to an
+	    amount determined by your "Max Level" and "Extra Points" options.
+	- **Skills in Pool:** Only usable if a specific character is set in your options. Adds a random selection
+	    of your character's skills as items up to an amount determined by your "Max Level" and "Extra Points" options.
 	"""
     display_name = "Skill Randomization"
     option_vanilla = 0
@@ -119,7 +125,6 @@ class BadassLevel(DefaultOnToggle):
     display_name = "Allow Badass Levels"
 
 
-
 class Chestsanity(Toggle):
     """
 	Gives every interactable chest-like object a check that will be sent upon the first time opening it.
@@ -138,9 +143,11 @@ class Doorsanity(Toggle):
 
 class ExcludeTerramorphous(DefaultOnToggle):
     """
-    Prevents progression being placed on the "Kill Terramorphous", "You. Will. Die. (Seriously.)", and the 2 Cult Symbol locations.
+    Prevents progression being placed on the "Kill Terramorphous", "You. Will. Die. (Seriously.)",
+    and the 2 Cult Symbol locations in Terramophous Peak.
     """
     display_name = "Exclude Terramorphous"
+
 
 @dataclass
 class Borderlands2Options(PerGameCommonOptions):

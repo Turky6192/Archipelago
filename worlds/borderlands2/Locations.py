@@ -10,11 +10,18 @@ class Borderlands2Location(Location):
 
 class Borderlands2LocationData(NamedTuple):
     in_game_region: str
-    story_region: int
+    story_region: int # 19 reserved for levels reached post end-game, TVHM/UVHM mode
     type: str
     dlc: Optional[List[str]] = None
     prereq_mission: Optional[str] = None
     locked_item: Optional[str] = None
+
+    # DLC Region will follow release schedule for campaign DLC
+    # Pirate's Booty -> Campaign of Carnage -> Big Game Hunt -> Assault on Dragon Keep -> Fight for Sanctuary
+    # DLC story regions broken up for ease of use following order above
+    # 20-29 -> 30-49 (Torgue only DLC with >10 Story Mission -> 50-59 -> 60-69 -> 70-79
+    # HH's only have one Story Mission so they will be numbered as 80 + their number (81-85)
+    # Currently ignoring Digistruct since its focus is super end-game and requires OP levels to fully access
 
 dlc_names = ["Pirate's Booty", "Campaign of Carnage", "Big Game Hunt", "Assault on Dragon Keep", "UVHM 1", "UVHM 2",
              "HH1: Bloody Harvest", "HH2: Wattle Gobbler", "HH3: Mercenary Day", "HH4: Wedding Day", "HH5: Crawmerax",
@@ -150,6 +157,7 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "Data Mining": Borderlands2LocationData(in_game_region="Arid Nexus Badlands", story_region=17, type="Story Mission",),
     "The Talon of God": Borderlands2LocationData(in_game_region="Vault of the Warrior", story_region=18, type="Story Mission",),
     "You. Will. Die. (Seriously.)": Borderlands2LocationData(in_game_region="Terramorphous Peak", story_region=18, type="Optional Mission",),
+
 
     # Boss Kills
     "Kill Assassin Oney": Borderlands2LocationData(in_game_region="Southpaw Steam and Power", story_region=3, type="Boss", prereq_mission="Assassinate the Assassins",),
@@ -408,22 +416,6 @@ def map_progress(data):
             map_dict[region] = story_progress - 1
     return map_dict
 
-
-# def get_min_story_regions(locations_data):
-#     # Initialize a dictionary to track the minimum story_region for each in_game_region
-#     min_story_regions = {}
-#
-#     # Iterate through all location data
-#     for location in locations_data:
-#         region = location.in_game_region
-#         story_region = location.story_region
-#
-#         # If we haven't seen this region before, or this story_region is smaller than what we've seen
-#         if region not in min_story_regions or story_region < min_story_regions[region]:
-#             min_story_regions[region] = story_region
-#
-#     return min_story_regions
-
 in_game_progress_map = map_progress(location_data_table)
 
 optionals_w_prereq = {"Bad Hair Day": ("This Town Ain't Big Enough",), "Shielded Favors": ("This Town Ain't Big Enough",),
@@ -493,4 +485,3 @@ def flip_dict():
     for key, value in optionals_w_prereq.items():
         for v in value:
             new_dict[v] = (key,)
-

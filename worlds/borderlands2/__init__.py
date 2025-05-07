@@ -30,36 +30,40 @@ class Borderlands2World(World):
     selected_dlc: List[str] = []
     origin_region_name = "Player"
     pooled_skills: int
+    max_level: int
+    chosen_char: int
     excluded_opt_missions: List[str] = []
 
     player_location_pool: Dict[str, int]
 
     def generate_early(self) -> None:
         # Verify a specific character is chosen if skill rando is set to "skills in pool"
-        self.pooled_skills = self.options.extra_skills
-        if self.options.skill_randomization > 0:
-            self.pooled_skills += self.options.max_level - 3
-        if self.options.character == 0 and self.options.skill_randomization == 2:
+        self.pooled_skills = self.options.extra_skills.value
+        self.chosen_char = self.options.character.value
+        self.max_level = self.options.max_level.value
+        if self.options.skill_randomization.value > 0:
+            self.pooled_skills += self.max_level - 3
+        if self.chosen_char == 0 and self.options.skill_randomization.value == 2:
             logging.warning("Borderlands 2: Player %s (%s has Skill Randomization set to "
                               "'Skills in Pool' but did not select a specific character. Using 'Points in Pool instead.",
                             self.player, self.player_name)
 
         # Verify that the player can reach all level locations wanted with chosen DLC options
         selected_dlc = list(self.options.allowed_dlc)
-        if self.options.max_level > 50:
+        if self.max_level > 50:
             level_dlc =  {"UVHM 1": 11, "UVHM 2": 11, "Fight for Sanctuary": 8}
             allowed_max = 50 + sum(level_dlc[dlc] for dlc in level_dlc if dlc in selected_dlc)
-            if allowed_max < self.options.max_level:
+            if allowed_max < self.max_level:
                 raise OptionError(f"Borderlands 2: Player {self.player} ({self.player_name} does not have required DLCs"
-                                  f" enabled to reach desired Max Level ({self.options.max_level}).)")
+                                  f" enabled to reach desired Max Level ({self.max_level}).)")
 
     def create_regions(self) -> None:
         # Current just use this for the level removal
         self.player_location_pool = self.location_name_to_id.copy()
 
         # Removes levels from location pool above selected max level
-        if self.options.max_level < 80:
-            for level in range(self.options.max_level + 1, 81):
+        if self.max_level < 80:
+            for level in range(self.max_level + 1, 81):
                 del self.player_location_pool[f"Level {level}"]
         # "Visit" locations are just for doorsanity
         if self.options.doorsanity == 0:
@@ -107,8 +111,10 @@ class Borderlands2World(World):
                     if prereq:
                         forbid_item(self.multiworld.get_location(prereq, self.player), f"{location.name} Unlock", self.player)
             if location.name in optionals_w_prereq.keys():
-                for prereq in optionals_w_prereq[location.name]:
-                    add_rule(location, lambda state, name=prereq: state.can_reach_location(f"{name}", self.player))
+                prereq_locks = recur_opt_key_lock(location.name, optionals_w_prereq)
+                for prereq in prereq_locks:
+                    add_rule(location, lambda state, name=prereq: state.has(f"{name} Unlock", self.player))
+
 
         # Connecting the regions and give key requirements
         for region_name, exits in in_game_regions_map.items():
@@ -215,10 +221,10 @@ class Borderlands2World(World):
             return chosen
 
         # Skill points or character-specific skills next
-        if self.options.character == 0 or self.options.character > 0 and self.options.skill_randomization < 2:
+        if self.chosen_char == 0 or self.chosen_char > 0 and self.options.skill_randomization.value < 2:
             borderlands2_items += [self.create_item("Skill Point") for _ in range(self.pooled_skills)]
-        elif self.options.character > 0 and self.options.skill_randomization == 2:
-            skills = get_skills(self.options.character, max(self.pooled_skills + 5, 50)) # Add a few extra to help synergy
+        elif self.chosen_char > 0 and self.options.skill_randomization.value == 2:
+            skills = get_skills(self.chosen_char, max(self.pooled_skills + 5, 50)) # Add a few extra to help synergy
             for skill in skills:
                 skill_item = self.create_item(skill)
                 borderlands2_items.append(skill_item)
@@ -249,7 +255,7 @@ class Borderlands2World(World):
         #     region_count += 1
         #
         # for region_name in story_region_names:
-        #     if 19 > region_index_list[region_name] > 4 and self.options.skill_randomization > 0:
+        #     if 19 > region_index_list[region_name] > 4 and self.options.skill_randomization.value > 0:
         #         set_rule(self.get_entrance(f"Story Progress {region_index_list[region_name] + 1}"),
         #                  lambda state, value=min(region_index_list[region_name], 18): state.has(
         #                      "Progressive Story Mission", self.player, value) and
@@ -304,7 +310,7 @@ class Borderlands2World(World):
         slot_data: Dict[str, Any] = {
             "character": self.options.character,
             "allowed_dlc": self.options.allowed_dlc,
-            "max_level": self.options.max_level,
+            "max_level": self.max_level,
             "skill_randomization": self.options.skill_randomization,
             "goal": self.options.goal,
             "claptrap_count": self.options.claptrap_count,
