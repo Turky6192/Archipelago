@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import List, Dict
+from typing import List, Dict, Any
 
 from Options import OptionError
 from BaseClasses import Region, Location, Item, Tutorial, ItemClassification, LocationProgressType
@@ -73,7 +73,6 @@ class Borderlands2World(World):
             region.add_locations(mapped_loc_per_region)
             terra_locs = [name for name, data in location_data_table.items() if data.in_game_region == "Terramorphous Peak"]
             # Might as well alter the locations needed, while adding them to each main region
-            print(mapped_loc_per_region)
             for location in region.get_locations():
                 # Add proper "Progressive Story Mission" requirements
                 prog_required = location_data_table[location.name].story_region
@@ -101,10 +100,15 @@ class Borderlands2World(World):
             self.multiworld.regions.append(region)
 
         # Once all regions and their locations are added we can want to ensure no mission unlocks are self-locking
-        # if location.name in optionals_w_prereq.keys():
-        #     add_locks = recur_opt_key_lock(location.name, optionals_w_prereq)
-        #     for prereq in add_locks:
-        #         forbid_item(self.multiworld.get_location(prereq, self.player), f"{location.name} Unlock", self.player)
+        for location in self.get_locations():
+            if location.name in optionals_w_dependants.keys():
+                add_locks = recur_opt_key_lock(location.name, optionals_w_dependants)
+                for prereq in add_locks:
+                    if prereq:
+                        forbid_item(self.multiworld.get_location(prereq, self.player), f"{location.name} Unlock", self.player)
+            if location.name in optionals_w_prereq.keys():
+                for prereq in optionals_w_prereq[location.name]:
+                    add_rule(location, lambda state, name=prereq: state.can_reach_location(f"{name}", self.player))
 
         # Connecting the regions and give key requirements
         for region_name, exits in in_game_regions_map.items():
@@ -148,6 +152,7 @@ class Borderlands2World(World):
         self.multiworld.early_items[self.player]["Progressive Story Mission"] = 1
         if self.options.doorsanity == 1:
             self.multiworld.early_items[self.player]["Southern Shelf Key"] = 1
+
         # mw_games = [game.game for game in self.multiworld.worlds.values()]
         # if not "Borderlands 2" in mw_games:
         #     borderlands2_items += [self.create_item("Progressive Story Mission") for _ in range(17)]
@@ -223,6 +228,7 @@ class Borderlands2World(World):
             opt_mission_item = self.create_item(item)
             borderlands2_items.append(opt_mission_item)
 
+        # Filler for remaining locations
         self.multiworld.itempool += borderlands2_items
         remaining_locs = len(self.multiworld.get_unfilled_locations(self.player)) - len(borderlands2_items)
         for _ in range(remaining_locs):
@@ -294,22 +300,21 @@ class Borderlands2World(World):
     #     """
     #     pass
     #
-    # def fill_slot_data(self) -> Mapping[str, Any]:  # json of WebHostLib.models.Slot
-    #     """
-    #     What is returned from this function will be in the `slot_data` field
-    #     in the `Connected` network package.
-    #     It should be a `dict` with `str` keys, and should be serializable with json.
-    #
-    #     This is a way the generator can give custom data to the client.
-    #     The client will receive this as JSON in the `Connected` response.
-    #
-    #     The generation does not wait for `generate_output` to complete before calling this.
-    #     `threading.Event` can be used if you need to wait for something from `generate_output`.
-    #     """
-    #     # The reason for the `Mapping` type annotation, rather than `dict`
-    #     # is so that type checkers won't worry about the mutability of `dict`,
-    #     # so you can have more specific typing in your world implementation.
-    #     return {}
+    def fill_slot_data(self) -> Dict[str, Any]:  # json of WebHostLib.models.Slot
+        slot_data: Dict[str, Any] = {
+            "character": self.options.character,
+            "allowed_dlc": self.options.allowed_dlc,
+            "max_level": self.options.max_level,
+            "skill_randomization": self.options.skill_randomization,
+            "goal": self.options.goal,
+            "claptrap_count": self.options.claptrap_count,
+            "doorsanity": self.options.doorsanity,
+            "badass_level": self.options.badass_level,
+            "chestsanity": self.options.chestsanity,
+        }
+
+        return slot_data
+
     #
     # def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]):
     #     """
@@ -318,7 +323,7 @@ class Borderlands2World(World):
     #     """
     #     pass
     #
-    # def modify_multidata(self, multidata: Dict[str, Any]) -> None:  # TODO: TypedDict for multidata?
+    # def modify_multidata(self, multidata: Dict[str, Any]) -> None:
     #     """For deeper modification of server multidata."""
     #     pass
     #
@@ -351,7 +356,6 @@ class Borderlands2World(World):
     #     Creates a group, which is an instance of World that is responsible for multiple others.
     #     An example case is ItemLinks creating these.
     #     """
-    #     # TODO remove loop when worlds use options dataclass
     #     for option_key, option in cls.options_dataclass.type_hints.items():
     #         getattr(multiworld, option_key)[new_player_id] = option.from_any(option.default)
     #     group = cls(multiworld, new_player_id)
