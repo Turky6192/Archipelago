@@ -61,6 +61,24 @@ class MaxLevel(Range):
     default = 36
 
 
+class OptionalMissionLocking(Choice):
+    """
+    Optional Missions can be locked to delineate your playthrough more, or not to help speed up playthrough time.
+
+    **Vanilla**: Optional Missions behave like normal, unlocking when the required prerequisite Story, or Optional,
+                 Missions are complete.
+    **Grouped**: "Unlock" items give access to groupings of Optional Missions, grouped either by the starting NPC,
+                 by questline, or by narrative timing.
+    **Full**: All Optional Missions have their own "Unlock" item, while also still requiring proper prerequisite access.
+
+    *Note: "Full" may be forced to "Grouped" depending on other settings to maintain item/location balance.*
+    """
+    display_name = "Optional Mission Locking"
+    option_vanilla = 0
+    option_grouped = 1
+    option_full = 2
+    default = 1
+
 class BossHuntCount(Range):
     """
 	Sets the amount of Bosses you need to kill to goal.
@@ -156,6 +174,7 @@ class Borderlands2Options(PerGameCommonOptions):
     allowed_dlc: AllowedDLC
     boss_hunt_count: BossHuntCount
     claptrap_count: ClaptrapCount
+    optional_mission_lock: OptionalMissionLocking
     skill_randomization: SkillRandom
     extra_skills: ExtraSkill
     badass_level: BadassLevel

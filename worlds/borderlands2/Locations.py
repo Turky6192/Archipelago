@@ -485,3 +485,6 @@ def flip_dict():
     for key, value in optionals_w_prereq.items():
         for v in value:
             new_dict[v] = (key,)
+
+print(tuple(name for name in optional_mission_list if "Mystery" in name))
+

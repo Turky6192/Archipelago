@@ -28,9 +28,9 @@ item_data_table: Dict[str, Borderlands2ItemData] = {
     "Common Item": Borderlands2ItemData(type="Filler"),
     "Uncommon Item": Borderlands2ItemData(type="Filler"),
     "Rare Item": Borderlands2ItemData(type="Filler"),
-    "Very Rare Item": Borderlands2ItemData(type="Filler", i_class=IC.useful),
+    "Very Rare Item": Borderlands2ItemData(type="Filler"),
     "Money": Borderlands2ItemData(type="Filler"),
-    "4 Eridium": Borderlands2ItemData(type="Filler", i_class=IC.useful),
+    "4 Eridium": Borderlands2ItemData(type="Filler"),
     "Random Ammo": Borderlands2ItemData(type="Filler"),
     "Skill Point": Borderlands2ItemData(type="Point", i_class=IC.progression),
 
@@ -401,3 +401,20 @@ filler_items = [name for name, data in item_data_table.items() if data.type == "
 skill_items = [name for name,data in item_data_table.items() if data.type == "Skill" or data.type == "Point"]
 optional_mission_items = [name for name, data in item_data_table.items() if data.type == "Optional Mission"]
 claptrap_items = [name for name, data in item_data_table.items() if data.type == "Claptrap Item"]
+
+grouped_optional_keys = {"Zafords vs. Hodunks Unlock": ('Clan War: Starting the War', 'Clan War: First Place', 'Clan War: Reach the Dead Drop', 'Clan War: End of the Rainbow', 'Clan War: Trailer Trashing', 'Clan War: Wakey Wakey', 'Clan War: Zafords vs. Hodunks'),
+                         "Bandit Slaughter Unlock": ('Bandit Slaughter: Round 1', 'Bandit Slaughter: Round 2', 'Bandit Slaughter: Round 3', 'Bandit Slaughter: Round 4', 'Bandit Slaughter: Round 5'),
+                         "Hyperion Slaughter Unlock": ('Hyperion Slaughter: Round 1', 'Hyperion Slaughter: Round 2', 'Hyperion Slaughter: Round 3', 'Hyperion Slaughter: Round 4', 'Hyperion Slaughter: Round 5'),
+                         "Dukino Unlock": ('Animal Rescue: Medicine', 'Animal Rescue: Food', 'Animal Rescue: Shelter', 'Demon Hunter'),
+                         "Nisha Unlock": ('3:10 to Kaboom', 'Breaking the Bank', 'Showdown'),
+                         "Scooter Unlock": ('The Cold Shoulder', 'Note to Self-Person', 'Swallowed Whole', 'Poetic License'),
+                         "Overlook Unlock": ('The Overlooked: Medicine Man', 'The Overlooked: Shields Up', 'The Overlooked: This is Only a Test'),
+                         "Rock, Paper, Genocide Unlock": ('Rock, Paper, Genocide: Fire Weapons!', 'Rock, Paper, Genocide: Shock Weapons!', 'Rock, Paper, Genocide: Corrosive Weapons!', 'Rock, Paper, Genocide: Slag Weapons!'),
+                         "Monster Mash Unlock": ('Monster Mash (Part 1)', 'Monster Mash (Part 2)', 'Monster Mash (Part 3)'),
+                         "A Real Boy Unlock": ('A Real Boy: Clothes Make the Man', 'A Real Boy: Face Time', 'A Real Boy: Human'),
+                         "Tiny Tea Party Unlock": ('You Are Cordially Invited: Party Prep', 'You Are Cordially Invited: RSVP', 'You Are Cordially Invited: Tea Party'),
+                         "Happy Pig Motel Unlock": ('No Vacancy', 'Neither Rain Nor Sleet Nor Skags'),
+                         "Medical Mystery Unlock": ('Do No Harm', 'Medical Mystery', 'Medical Mystery: X-Com-municate'),
+                         "Early Hammerlock Unlock": ('Handsome Jack Here!', "This Town Ain't Big Enough", 'Bad Hair Day', 'Shielded Favors', 'Symbiosis', 'The Name Game')
+                         }
+
