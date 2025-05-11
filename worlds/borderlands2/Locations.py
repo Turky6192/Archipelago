@@ -486,5 +486,5 @@ def flip_dict():
         for v in value:
             new_dict[v] = (key,)
 
-print(tuple(name for name in optional_mission_list if "Mystery" in name))
+print(tuple(name for name in optional_mission_list if "Cult Following" in name))
 
