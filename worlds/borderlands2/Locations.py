@@ -28,7 +28,7 @@ dlc_names = ["Pirate's Booty", "Campaign of Carnage", "Big Game Hunt", "Assault 
              "Fight for Sanctuary"]
 
 location_data_table: Dict[str, Borderlands2LocationData] = {
-    # Base Game Missions
+    # Base Game Missions # 128 total, 19 Story, 109 Optional
     "My First Gun": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=0, type="Story Mission",),
     "Blindsided": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=1, type="Story Mission",),
     "Cleaning Up the Berg": Borderlands2LocationData(in_game_region="Southern Shelf", story_region=2, type="Story Mission",),
@@ -159,7 +159,7 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "You. Will. Die. (Seriously.)": Borderlands2LocationData(in_game_region="Terramorphous Peak", story_region=18, type="Optional Mission",),
 
 
-    # Boss Kills
+    #  Base Game Boss Kills # 56
     "Kill Assassin Oney": Borderlands2LocationData(in_game_region="Southpaw Steam and Power", story_region=3, type="Boss", prereq_mission="Assassinate the Assassins",),
     "Kill Assassin Reeth": Borderlands2LocationData(in_game_region="Southpaw Steam and Power", story_region=3, type="Boss", prereq_mission="Assassinate the Assassins",),
     "Kill Assassin Rouf": Borderlands2LocationData(in_game_region="Southpaw Steam and Power", story_region=3, type="Boss", prereq_mission="Assassinate the Assassins",),
@@ -217,7 +217,7 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "Kill W4R-D3N": Borderlands2LocationData(in_game_region="Bloodshot Ramparts", story_region=7, type="Boss",),
     "Kill Wilhelm": Borderlands2LocationData(in_game_region="End of the Line", story_region=8, type="Boss",),
 
-    # Vault Symbols
+    # Base Game Vault Symbols # 62
     "Arid Nexus Boneyard Vault Symbol 1": Borderlands2LocationData(in_game_region="Arid Nexus Boneyard", story_region=16, type="Vault Symbol",),
     "Arid Nexus Boneyard Vault Symbol 2": Borderlands2LocationData(in_game_region="Arid Nexus Boneyard", story_region=16, type="Vault Symbol",),
     "Bloodshot Ramparts Vault Symbol": Borderlands2LocationData(in_game_region="Bloodshot Ramparts", story_region=7, type="Vault Symbol",),
@@ -281,7 +281,7 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "Wildlife Exploitation Preserve Vault Symbol 2": Borderlands2LocationData(in_game_region="Wildlife Exploitation Preserve", story_region=11, type="Vault Symbol",),
     "Windshear Waste Vault Symbol": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=0, type="Vault Symbol",),
 
-    # Region Visits for Doorsanity
+    # Region Visits for Doorsanity # 36
     "Visit Windshear Waste": Borderlands2LocationData(in_game_region="Windshear Waste", story_region=0, type="Region Visit",),
     "Visit Southern Shelf": Borderlands2LocationData(in_game_region="Southern Shelf", story_region=2, type="Region Visit",),
     "Visit Southern Shelf Bay": Borderlands2LocationData(in_game_region="Southern Shelf Bay", story_region=2, type="Region Visit",),
@@ -319,7 +319,7 @@ location_data_table: Dict[str, Borderlands2LocationData] = {
     "Visit Natural Selection Annex": Borderlands2LocationData(in_game_region="Natural Selection Annex", story_region=11, type="Region Visit",),
     "Visit Sanctuary Hole": Borderlands2LocationData(in_game_region="Sanctuary Hole", story_region=9, type="Region Visit",),
 
-    # Level Achievements
+    # Level Achievements # 79
     "Level 2": Borderlands2LocationData(in_game_region="Player", story_region=2, type="Level",),
     "Level 3": Borderlands2LocationData(in_game_region="Player", story_region=2, type="Level",),
     "Level 4": Borderlands2LocationData(in_game_region="Player", story_region=3, type="Level",),
@@ -480,11 +480,12 @@ def recur_opt_key_lock(mission, prerequisites):
         total_prereq.extend(recur_opt_key_lock(new_prereq, prerequisites))
     return total_prereq
 
-def flip_dict():
+def flip_dict(d):
     new_dict = {}
-    for key, value in optionals_w_prereq.items():
+    for key, value in d.items():
         for v in value:
             new_dict[v] = (key,)
+    return new_dict
 
-print(tuple(name for name in optional_mission_list if "Cult Following" in name))
+
 

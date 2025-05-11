@@ -66,9 +66,9 @@ class OptionalMissionLocking(Choice):
     Optional Missions can be locked to delineate your playthrough more, or not to help speed up playthrough time.
 
     **Vanilla**: Optional Missions behave like normal, unlocking when the required prerequisite Story, or Optional,
-                 Missions are complete.
+                 Mission(s) are complete.
     **Grouped**: "Unlock" items give access to groupings of Optional Missions, grouped either by the starting NPC,
-                 by questline, or by narrative timing.
+                 questline, narrative timing, or general location.
     **Full**: All Optional Missions have their own "Unlock" item, while also still requiring proper prerequisite access.
 
     *Note: "Full" may be forced to "Grouped" depending on other settings to maintain item/location balance.*
@@ -174,7 +174,7 @@ class Borderlands2Options(PerGameCommonOptions):
     allowed_dlc: AllowedDLC
     boss_hunt_count: BossHuntCount
     claptrap_count: ClaptrapCount
-    optional_mission_lock: OptionalMissionLocking
+    optional_mission_locking: OptionalMissionLocking
     skill_randomization: SkillRandom
     extra_skills: ExtraSkill
     badass_level: BadassLevel
